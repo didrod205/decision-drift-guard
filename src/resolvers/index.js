@@ -2,8 +2,9 @@ import Resolver from '@forge/resolver';
 import { checkIssue, noConfluence } from '../lib/core';
 import { fetchDecisions, getIssue, requestReopen, siteBase, fetchDecisionPage } from '../lib/atlassian';
 import { statusOf, replacementOf, RETIRED } from '../lib/change';
-import { getSettings, saveSettings, recordResult, recordEvent, readHistory, addLink, removeLink, linksForIssue, allLinks, readChanges } from '../lib/store';
-import { autoLink } from '../lib/links';
+import { getSettings, saveSettings, recordResult, recordEvent, readHistory, addLink, removeLink, linksForIssue, allLinks, readChanges, setAck } from '../lib/store';
+import { autoLink, scanProject } from '../lib/links';
+import { retiredFollowed } from '../guard';
 import { createSampleData, sampleIndexed, createSampleIssues } from '../lib/seed';
 
 const resolver = new Resolver();
@@ -17,7 +18,8 @@ export const runCheck = async (key, as) => {
   } catch (e) {
     return noConfluence(key, e);
   }
-  return checkIssue(issue, decisions, { synonyms: settings.synonyms });
+  const r = checkIssue(issue, decisions, { synonyms: settings.synonyms, experimental: settings.experimentalMeaning === true, bans: settings.banCheck !== false });
+  return { ...r, experimental: settings.experimentalMeaning === true, bans: settings.banCheck !== false };
 };
 
 resolver.define('check', async ({ context }) => {
@@ -72,5 +74,9 @@ resolver.define('changes', async () => {
   const [changes, links] = await Promise.all([readChanges(), allLinks()]);
   return { changes: changes.sort((a, b) => String(b.at).localeCompare(String(a.at))), links, base: await siteBase() };
 });
+
+resolver.define('scan', async ({ payload }) => scanProject(payload || {}));
+resolver.define('closeCheck', async ({ context }) => ({ retired: await retiredFollowed(context.extension.issue.key, 'user') }));
+resolver.define('ack', async ({ payload, context }) => { await setAck(context.extension.issue.key, String(payload.pageId)); return true; });
 
 export const handler = resolver.getDefinitions();

@@ -2,7 +2,7 @@
 // Given two versions of a Confluence decision page (storage format), says exactly one of:
 //   'retired'  the status moved to Superseded, Deprecated, Rejected, Abandoned (or Withdrawn, Archived, Replaced)
 //   'changed'  the decision text itself changed (sentences removed or added)
-//   'ignored'  anything else: edits outside the decision text, or only spacing, case or punctuation
+//   'ignored'  anything else: edits outside the decision text, or only spacing, case, punctuation, links or small typos
 // The same two inputs always give the same answer.
 
 export const RETIRED = /\b(supersed\w*|deprecat\w*|reject\w*|abandon\w*|withdrawn|archived|replaced|no longer applies)\b/i;
@@ -45,6 +45,12 @@ export const decisionTextOf = (html) => {
   if (sec) return textOf(sec[3]);
   const row = /<tr[^>]*>\s*<t[hd][^>]*>\s*(?:<[^>]+>\s*)*(Decision|Outcome)\s*(?:<[^>]+>\s*)*<\/t[hd]>\s*<td[^>]*>([\s\S]*?)<\/td>/i.exec(h);
   if (row) return textOf(row[2]);
+  // Inline decisions typed with /decision: only the decided items count as the decision text.
+  const items = [...h.matchAll(/<ac:adf-node type="decision-item">([\s\S]*?)<\/ac:adf-node>/g)]
+    .filter((m) => !/<ac:adf-attribute key="state">(?!DECIDED)/.test(m[1]))
+    .map((m) => { const c = /<ac:adf-content>([\s\S]*?)<\/ac:adf-content>/.exec(m[1]); return c ? textOf(c[1]) : ''; })
+    .filter(Boolean);
+  if (items.length) return items.join('\n');
   return textOf(h);
 };
 
@@ -66,14 +72,88 @@ export const sentences = (text) => String(text || '')
   .split(/\n+|(?<=[.!?])\s+/)
   .map((s) => s.replace(/\s+/g, ' ').trim())
   .filter((s) => /[A-Za-z0-9\u3131-\uD79D]/.test(s));
-export const fold = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9\u3131-\uD79D]+/g, ' ').trim();
+// Folding drops case, spacing, punctuation and web addresses (a link moved to a new URL is not a new decision).
+export const fold = (s) => String(s || '').replace(/https?:\/\/\S+|\(\.{0,2}\/[^)\s]*\)/g, ' ').toLowerCase().replace(/[^a-z0-9\u3131-\uD79D]+/g, ' ').trim();
+
+// Small edit distance between two words (stops counting above max).
+export const editDistance = (a, b, max = 3) => {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let best = i;
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      best = Math.min(best, cur[j]);
+    }
+    if (best > max) return max + 1;
+    prev = cur;
+  }
+  return prev[b.length];
+};
+
+// Words whose change can flip a decision: never treated as typos.
+const KEEP = new Set('must should shall may might can cannot will would not never always only avoid allow allowed use used uses using stop start enable disable enabled disabled require required optional deprecated replace instead before after more less most least all none some any no yes'.split(' '));
+const NEG_PREFIX = /^(un|dis|in|im|non|de)/;
+
+// Small grammar words a proofreading fix may add, drop or swap ("the", "be", "is", a doubled word).
+const FUNC = new Set('a an the be is are was were to of by it its that this these those which as down'.split(' '));
+const typoPair = (x, y) => (x.length >= 4 && y.length >= 4 && !/\d/.test(x + y) && !KEEP.has(x) && !KEEP.has(y)
+  && !(NEG_PREFIX.test(x) && x.replace(NEG_PREFIX, '') === y) && !(NEG_PREFIX.test(y) && y.replace(NEG_PREFIX, '') === x)
+  && editDistance(x, y, 2) <= 2) || (FUNC.has(x) && FUNC.has(y));
+
+// A typo or formatting fix: the same words once case, spacing, punctuation, list markers and links are dropped
+// (so re-wrapped lines and lists count as the same), or a word-by-word alignment where every difference is
+// a small spelling fix (2 letters at most, words of 4+ letters, no digits, no modal or negation words), a
+// grammar word added, dropped or swapped, or a doubled word removed. At most 2 such fixes, or 1 in 10 words.
+export const isTrivialEdit = (before, after) => {
+  const a = fold(before).split(' ').filter(Boolean);
+  const b = fold(after).split(' ').filter(Boolean);
+  if (a.join('') === b.join('')) return true;
+  if (a.length > 400 || b.length > 400) return false;
+  const L = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
+  for (let i = a.length - 1; i >= 0; i--) for (let j = b.length - 1; j >= 0; j--) L[i][j] = a[i] === b[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const gaps = [];
+  let i = 0; let j = 0; let del = []; let ins = [];
+  const flush = (k) => { if (del.length || ins.length) gaps.push({ del, ins, prev: a[i - del.length - 1], next: a[k] }); del = []; ins = []; };
+  while (i < a.length || j < b.length) {
+    if (i < a.length && j < b.length && a[i] === b[j]) { flush(i); i++; j++; } else if (j < b.length && (i >= a.length || L[i][j + 1] >= L[i + 1][j])) { ins.push(b[j]); j++; } else { del.push(a[i]); i++; }
+  }
+  flush(i);
+  let fixes = 0;
+  for (const g of gaps) {
+    if (g.del.join('') === g.ins.join('')) { fixes++; continue; }
+    if (g.del.length && g.del.length === g.ins.length && g.del.every((w, k) => typoPair(w, g.ins[k]))) { fixes += g.del.length; continue; }
+    const loose = (w) => FUNC.has(w) || w === g.prev || w === g.next;
+    if (!(g.del.length && g.ins.length) && [...g.del, ...g.ins].every(loose)) { fixes += g.del.length + g.ins.length; continue; }
+    return false;
+  }
+  return fixes <= Math.max(2, Math.ceil(Math.min(a.length, b.length) / 10));
+};
 
 export const sentenceDiff = (before, after) => {
   const a = sentences(before);
   const b = sentences(after);
   const fa = new Set(a.map(fold));
   const fb = new Set(b.map(fold));
-  return { removed: a.filter((s) => !fb.has(fold(s))), added: b.filter((s) => !fa.has(fold(s))) };
+  let removed = a.filter((s) => !fb.has(fold(s)));
+  let added = b.filter((s) => !fa.has(fold(s)));
+  // Pair each removed sentence with an added one that is only a typo or formatting fix of it.
+  const trivial = [];
+  const used = new Set();
+  removed = removed.filter((r) => {
+    const j = added.findIndex((x, k) => !used.has(k) && isTrivialEdit(r, x));
+    if (j < 0) return true;
+    used.add(j); trivial.push([r, added[j]]);
+    return false;
+  });
+  added = added.filter((_, k) => !used.has(k));
+  // Lines re-wrapped or a list re-flowed: the remaining removed and added text together is only a fix.
+  if ((removed.length || added.length) && isTrivialEdit(removed.join(' '), added.join(' '))) {
+    trivial.push([removed.join(' '), added.join(' ')]);
+    removed = []; added = [];
+  }
+  return { removed, added, trivial };
 };
 
 export const compareVersions = (oldHtml, newHtml) => {
@@ -92,7 +172,9 @@ export const compareVersions = (oldHtml, newHtml) => {
     replacement: kind === 'retired' ? replacementOf(newHtml) : null,
     reason: kind === 'retired' ? `Status changed from ${fromStatus || 'none'} to ${toStatus}`
       : kind === 'changed' ? `Decision text changed (${diff.removed.length} sentence(s) removed, ${diff.added.length} added)`
-        : 'No status change to a retired state and no change to the decision sentences',
+        : diff.trivial.length ? `Only typo, spacing, punctuation or link fixes in the decision text (${diff.trivial.length} sentence(s))`
+          : 'No status change to a retired state and no change to the decision sentences',
+    trivial: diff.trivial.length,
   };
 };
 
@@ -128,4 +210,12 @@ export const linkedPageIds = ({ description, remoteLinks }, siteHost) => {
     if (id && !found.has(id)) found.set(id, 'Confluence link');
   });
   return [...found.entries()].map(([pageId, via]) => ({ pageId, via }));
+};
+
+// Message shown when the close check stops a transition.
+export const closeMessage = (open) => {
+  const one = open[0];
+  const more = open.length > 1 ? ` and ${open.length - 1} more` : '';
+  const rep = one.replacement ? ` (replaced by ${one.replacement.title})` : '';
+  return `This work item follows "${one.title}", which is now ${one.status}${rep}${more}. Check the work against the current decision, then press "Checked against the current decision" or "Unlink" in the Decision check panel and try again.`;
 };

@@ -37,5 +37,26 @@ eq('linked pages', C.linkedPageIds({ description: desc, remoteLinks: remote }, '
 eq('no links', C.linkedPageIds({ description: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Bump moment to 2.30' }] }] }, remoteLinks: [] }, 'acme.atlassian.net'), []);
 // 10 same inputs, same answer (determinism)
 eq('deterministic', JSON.stringify(C.compareVersions(page('Accepted', D), page('Accepted', D2))), JSON.stringify(r4));
+// 11 small fixes inside the decision text are ignored (v7): typo, doubled word, grammar word, re-wrapped list, link address
+const T = (a, b) => C.compareVersions(page('Accepted', a), page('Accepted', b)).kind;
+eq('typo ignored', T('Frontend packages should use the fetchApiRef for all requests to the backend sevrices.', 'Frontend packages should use the fetchApiRef for all requests to the backend services.'), 'ignored');
+eq('doubled word ignored', T('We charge a fee to compensate for this this cost.', 'We charge a fee to compensate for this cost.'), 'ignored');
+eq('grammar word ignored', T('Modules will use whichever codec that is instantiated in the app.', 'Modules will use whichever codec is instantiated in the app.'), 'ignored');
+eq('list reflow ignored', T('It supports: sorted indexes. Unique indexes.', '<p>It supports:</p><ul><li>sorted indexes</li><li>Unique indexes</li></ul>'), 'ignored');
+eq('link address ignored', T('See the guide at https://example.com/old for details.', 'See the guide at https://example.com/new-place for details.'), 'ignored');
+eq('trivial reason', C.compareVersions(page('Accepted', 'Use the fetchApiRef for all requests to backend sevrices.'), page('Accepted', 'Use the fetchApiRef for all requests to backend services.')).trivial, 1);
+// 12 real changes that look small are still changes
+eq('enable to disable', T('Teams should enable strict mode in every package.', 'Teams should disable strict mode in every package.'), 'changed');
+eq('npm to pnpm', T('All packages use npm workspaces.', 'All packages use pnpm workspaces.'), 'changed');
+eq('must to must not', T('Services must call the gateway directly.', 'Services must not call the gateway directly.'), 'changed');
+eq('version number', T('We require Node 18 or later.', 'We require Node 20 or later.'), 'changed');
+eq('should to shall not', T('Clients should retry requests.', 'Clients should never retry requests.'), 'changed');
+eq('tool swap', T('We will use Luxon for date handling.', 'We will use Dayjs for date handling.'), 'changed');
+// 13 inline decisions (/decision): only decided items count as the decision text
+const inl = (t, extra = '') => `<p>Meeting notes ${extra}</p><ac:adf-extension><ac:adf-node type="decision-list"><ac:adf-node type="decision-item"><ac:adf-attribute key="state">DECIDED</ac:adf-attribute><ac:adf-content>${t}</ac:adf-content></ac:adf-node></ac:adf-node></ac:adf-extension>`;
+eq('inline notes edit ignored', C.compareVersions(inl('Use Postgres for the ledger.'), inl('Use Postgres for the ledger.', 'with Ana and Bo')).kind, 'ignored');
+eq('inline decision changed', C.compareVersions(inl('Use Postgres for the ledger.'), inl('Use DynamoDB for the ledger.')).kind, 'changed');
+// 14 close check message
+eq('close message', C.closeMessage([{ title: 'ADR013', status: 'Superseded', replacement: { title: 'ADR014' } }, { title: 'ADR006', status: 'Deprecated' }]), 'This work item follows "ADR013", which is now Superseded (replaced by ADR014) and 1 more. Check the work against the current decision, then press "Checked against the current decision" or "Unlink" in the Decision check panel and try again.');
 console.log(`unit tests: ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

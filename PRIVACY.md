@@ -15,3 +15,5 @@ Questions: hello@elab-studio.com
 
 ## Added in version 4 (decision changed)
 The app also stores, in Forge storage on Atlassian: links between work item keys and Confluence page ids (with page title, URL, how and when the link was made), and one record per changed decision page version (statuses, up to six removed and six added sentences quoted from the decision page, the work item keys commented). No account IDs are stored. Page versions are read only to compare them; no copy of a page is kept.
+
+- "Checked against the current decision" marks: work item key, decision page id and the time, kept in Forge storage so the close check can let the transition through. The project scan stores only the same follow links described above.

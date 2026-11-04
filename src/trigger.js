@@ -1,6 +1,6 @@
 import { runCheck } from './resolvers';
 import { commentConflicts, addIssueLabel, pageVersion, commentDecisionChange } from './lib/atlassian';
-import { recordResult, recordEvent, linksForPage, claimChange, saveChange } from './lib/store';
+import { recordResult, recordEvent, linksForPage, claimChange, saveChange, getSettings } from './lib/store';
 import { autoLink } from './lib/links';
 import { compareVersions } from './lib/change';
 
@@ -16,6 +16,8 @@ export const onIssueCreated = async (event) => {
     console.error(`DDG ${key} link failed: ${e.message}`);
   }
   try {
+    const settings = await getSettings();
+    if (!settings.banCheck && !settings.experimentalMeaning) return;
     const result = await runCheck(key, 'app');
     console.log(`DDG ${key} state=${result.state} conflicts=${result.conflicts.length} possible=${(result.possible || []).length} related=${result.related.length}`);
     if (result.state === 'conflict' || result.state === 'possible-conflict') {

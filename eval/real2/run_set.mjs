@@ -32,7 +32,7 @@ const negs = JSON.parse(fs.readFileSync(path.join(setDir, 'negatives.json')));
 const prs = prFile ? JSON.parse(fs.readFileSync(prFile)) : {};
 const clean = (s) => String(s || '').replace(/<!--[\s\S]*?-->/g, ' ');
 const res = { pos: [], neg: [] };
-const run = (o) => core.checkIssue({ key: '#' + o.n, summary: o.title, description: clean(o.body), linkedPRs: prs[o.n] || [] }, decs);
+const run = (o) => core.checkIssue({ key: '#' + o.n, summary: o.title, description: clean(o.body), linkedPRs: prs[o.n] || [] }, decs, { experimental: !process.env.DDG_BANS_ONLY });
 for (const o of cands) { const exp = L.positives[o.n]; if (!exp) continue;
   const r = run(o); const want = exp.map((x) => 'ADR-' + x);
   const fl = [...r.conflicts, ...r.possible].map((x) => x.key), rel = r.related.map((x) => x.key);

@@ -178,6 +178,20 @@ export const issueLinkTargets = async (key, as = 'app') => {
   return linkedPageIds({ description: j.fields.description, remoteLinks: remote }, host);
 };
 
+// Work items of one project, newest first, 50 at a time (Jira enhanced JQL search).
+export const searchIssues = async (jql, nextPageToken) => {
+  const body = { jql, maxResults: 50, fields: ['description', 'summary'] };
+  if (nextPageToken) body.nextPageToken = nextPageToken;
+  const res = await api.asUser().requestJira(route`/rest/api/3/search/jql`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) });
+  if (!res.ok) throw new Error(`Search failed (${res.status}): ${(await res.text()).slice(0, 160)}`);
+  return res.json();
+};
+export const remoteLinksOf = async (key) => {
+  const rl = await api.asUser().requestJira(route`/rest/api/3/issue/${key}/remotelink`);
+  return rl.ok ? rl.json() : [];
+};
+export const siteHost = async () => (await siteBase()).replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+
 // Comment on a work item whose decision changed. Only facts read from the two page versions.
 export const commentDecisionChange = async (issueKey, ch, link) => {
   const content = [];
@@ -186,8 +200,9 @@ export const commentDecisionChange = async (issueKey, ch, link) => {
   const facts = [];
   if (ch.fromStatus !== ch.toStatus) facts.push([t('Status: ', true), t(`${ch.fromStatus} to ${ch.toStatus}`)]);
   if (ch.replacement) facts.push([t('Replaced by: ', true), ch.replacement.url ? linkText(ch.replacement.title, ch.replacement.url) : t(ch.replacement.title)]);
-  ch.removed.forEach((s) => facts.push([t('Removed: ', true), t(`"${s}"`)]));
-  ch.added.forEach((s) => facts.push([t('Added: ', true), t(`"${s}"`)]));
+  const colored = (text, color) => ({ type: 'text', text, marks: [{ type: 'textColor', attrs: { color } }] });
+  ch.removed.forEach((s) => facts.push([t('Removed: ', true), colored(`"${s}"`, '#bf2600')]));
+  ch.added.forEach((s) => facts.push([t('Added: ', true), colored(`"${s}"`, '#006644')]));
   if (link) facts.push([t('Why this work item: ', true), t(`linked to the decision by ${link.via} on ${String(link.linkedAt).slice(0, 10)}.`)]);
   if (facts.length) content.push({ type: 'bulletList', content: facts.map((c) => ({ type: 'listItem', content: [{ type: 'paragraph', content: c }] })) });
   content.push({ type: 'paragraph', content: [t('Please check whether this work still holds. Nothing else on this work item or the decision page was changed.')] });

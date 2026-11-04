@@ -195,7 +195,8 @@ export const checkIssue = (issue, decisionsAll, opts = {}) => {
       matchedScope: a, matchedRule: x, score: Math.round(scores[i] * 100) / 100,
       evidence: x.length ? { rule: `Do not: ${x.join(', ')}`, issueQuote: quoteFrom(raw, x[0]) } : null,
     };
-    if (x.length) { base.conflicts.push(card); return; }
+    if (x.length && opts.bans !== false) { base.conflicts.push(card); return; }
+    if (!opts.experimental) return;
     const sem = semanticCheck(raw, tokens, mentions, compileDecision(d, lex));
     if (sem.level === 'possible') {
       base.possible.push({ ...card, evidence: { rule: sem.rule, issueQuote: sem.quote, readAs: sem.why } });
@@ -218,7 +219,7 @@ export const checkIssue = (issue, decisionsAll, opts = {}) => {
     conflict: `Conflicts with ${base.conflicts.map(name).join(', ')}. Each warning quotes the rule it breaks.`,
     'possible-conflict': `Possible conflict with ${base.possible.map(name).join(', ')}: the wording differs, but the same thing is described. Check the evidence or ask the agent.`,
     'needs-judgment': `Touches ${base.related.map(name).join(', ')} but no rule is broken. Ask the agent or read the decision before starting.`,
-    clear: `No active decision covers this work item (${active.length} decisions checked).`,
+    clear: opts.experimental ? `No active decision covers this work item (${active.length} decisions checked).` : `None of the ${active.length} active decisions bans anything this work item names. The meaning-based check is experimental and off.`,
   }[state];
   return { ...base, state, message };
 };

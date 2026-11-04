@@ -23,6 +23,11 @@ modules:
       render: native
       title: Decision drift history
       icon: resource:icons;icon.svg
+  jira:workflowValidator:
+    - key: decision-drift-guard-close-check
+      name: Followed decisions are still current
+      description: Stops the transition when this work item follows a Confluence decision that was marked Superseded, Deprecated, Rejected or Abandoned and nobody has checked the work against it.
+      function: close-check-fn
   rovo:agent:
     - key: decision-drift-guard-agent
       name: Decision Drift Guard
@@ -104,6 +109,8 @@ modules:
       handler: index.listDecisions
     - key: reopen-decision-fn
       handler: index.reopenDecision
+    - key: close-check-fn
+      handler: index.validateClose
     - key: on-issue-created-fn
       handler: index.onIssueCreated
     - key: on-issue-updated-fn

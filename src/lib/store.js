@@ -1,6 +1,6 @@
 import { kvs, WhereConditions } from '@forge/kvs';
 
-export const DEFAULT_SETTINGS = { labels: ['decision'], titleWords: ['decision', 'ADR'], spaces: [], useTemplate: true, useInline: true, synonyms: '' };
+export const DEFAULT_SETTINGS = { labels: ['decision'], titleWords: ['decision', 'ADR'], spaces: [], useTemplate: true, useInline: true, synonyms: '', banCheck: true, experimentalMeaning: false };
 
 const list = (v) => (Array.isArray(v) ? v : String(v || '').split(',')).map((x) => String(x).trim()).filter(Boolean).slice(0, 20);
 
@@ -11,6 +11,8 @@ export const cleanSettings = (s) => ({
   useTemplate: s.useTemplate !== false,
   useInline: s.useInline !== false,
   synonyms: String(s.synonyms || '').slice(0, 4000),
+  banCheck: s.banCheck !== false,
+  experimentalMeaning: s.experimentalMeaning === true,
 });
 
 export const getSettings = async () => ({ ...DEFAULT_SETTINGS, ...((await kvs.get('settings')) || {}) });
@@ -75,7 +77,7 @@ const listBy = async (prefix, max = 10) => {
 export const addLink = async ({ pageId, issueKey, via, title, url }) => {
   const k1 = `link:${safe(pageId)}:${safe(issueKey)}`;
   const prev = await kvs.get(k1);
-  if (prev) return prev;
+  if (prev) return { ...prev, existed: true };
   const v = { pageId: String(pageId), issueKey, via, title: title || '', url: url || '', linkedAt: new Date().toISOString() };
   await kvs.set(k1, v);
   await kvs.set(`il:${safe(issueKey)}:${safe(pageId)}`, v);
@@ -98,3 +100,7 @@ export const claimChange = async (pageId, version) => {
 };
 export const saveChange = (pageId, version, value) => kvs.set(`c:${safe(pageId)}:${String(version).padStart(6, '0')}`, { ...value, pageId: String(pageId), version, at: new Date().toISOString() });
 export const readChanges = () => listBy('c:');
+
+// "I checked this work against the new decision": lets the close check pass for one followed page.
+export const setAck = (issueKey, pageId) => kvs.set(`ack:${safe(issueKey)}:${safe(pageId)}`, { issueKey, pageId: String(pageId), at: new Date().toISOString() });
+export const getAck = (issueKey, pageId) => kvs.get(`ack:${safe(issueKey)}:${safe(pageId)}`);

@@ -14,7 +14,7 @@ for (const [file, mode] of [['paraphrase_set.json', 'structured'], ['paraphrase_
     : core.decisionsFromPage({ ...p, labelled: true }));
   let tp = 0, pos = 0, fp = 0, neg = 0; const miss = [], wrong = [];
   for (const c of cases) {
-    const r = core.checkIssue({ key: c.id, summary: c.s, description: c.d }, decs);
+    const r = core.checkIssue({ key: c.id, summary: c.s, description: c.d }, decs, { experimental: true });
     const flagged = [...r.conflicts, ...r.possible].map((x) => x.key);
     if (c.expect) { pos++; if (flagged.includes(c.expect)) tp++; else miss.push(c.id); } else { neg++; if (flagged.length) { fp++; wrong.push(c.id); } }
   }

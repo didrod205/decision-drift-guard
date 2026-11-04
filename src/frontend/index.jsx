@@ -97,7 +97,7 @@ const Follows = ({ data, onLink, onUnlink, busy }) => {
             </Stack>
             <Button appearance="subtle" isDisabled={busy} onClick={() => onUnlink(l)}>Unlink</Button>
           </Inline>
-        )) : <Text size="small" color="color.text.subtlest">None yet. Link a decision page in the description, or pick one here.</Text>}
+        )) : <Text size="small" color="color.text.subtlest">Not following any decision yet. Paste a decision page link in the description, add it as a Confluence link, pick one below, or run Scan in the app settings.</Text>}
         {options.length ? (
           <Inline space="space.100" alignBlock="center">
             <Box xcss={xcss({ minWidth: '200px', flexGrow: 1 })}><Select inputId="ddg-follow" placeholder="Pick a decision" options={options} value={pick} onChange={setPick} /></Box>
@@ -110,6 +110,30 @@ const Follows = ({ data, onLink, onUnlink, busy }) => {
   );
 };
 
+// Shown at the top when a followed decision was retired: deterministic, read from the page status now.
+const CloseWarning = ({ retired, onAck, busy }) => {
+  const open = retired.filter((r) => !r.checked);
+  if (!retired.length) return null;
+  if (!open.length) return <SectionMessage appearance="success" title="Checked against the current decision"><Text>{retired.map((r) => r.title).join(', ')}: retired, and someone marked this work as checked. The close check will let it through.</Text></SectionMessage>;
+  return (
+    <SectionMessage appearance="warning" title="Check before closing: a decision this work follows was retired">
+      <Stack space="space.100">
+        {open.map((r) => (
+          <Stack key={r.pageId} space="space.050">
+            <Inline space="space.100" alignBlock="center" shouldWrap>
+              <Link href={r.url} openNewTab>{r.title}</Link>
+              <Lozenge appearance="removed">{String(r.status).slice(0, 30)}</Lozenge>
+              {r.replacement ? (r.replacement.url ? <Link href={r.replacement.url} openNewTab>{`Replaced by ${r.replacement.title}`}</Link> : <Text>{`Replaced by ${r.replacement.title}`}</Text>) : null}
+            </Inline>
+            <Inline space="space.100"><Button isDisabled={busy} onClick={() => onAck(r)}>Checked against the current decision</Button></Inline>
+          </Stack>
+        ))}
+        <Text size="small">If the workflow uses the "Followed decisions are still current" rule, moving this work item to Done is stopped until it is checked or unlinked.</Text>
+      </Stack>
+    </SectionMessage>
+  );
+};
+
 const App = () => {
   const [res, setRes] = useState(null);
   const [err, setErr] = useState(null);
@@ -118,9 +142,12 @@ const App = () => {
   const [rovoOn, setRovoOn] = useState(false);
   const [fol, setFol] = useState(null);
   const [folBusy, setFolBusy] = useState(false);
-  const loadFollows = () => invoke('links').then(setFol).catch(() => setFol(null));
+  const [guard, setGuard] = useState(null);
+  const loadGuard = () => invoke('closeCheck').then(setGuard).catch(() => setGuard(null));
+  const loadFollows = () => Promise.all([invoke('links').then(setFol).catch(() => setFol(null)), loadGuard()]);
   const doLink = async (p) => { setFolBusy(true); await invoke('link', { pageId: p.pageId, title: p.title, url: p.url }).catch(() => {}); await loadFollows(); setFolBusy(false); };
   const doUnlink = async (l) => { setFolBusy(true); await invoke('unlink', { pageId: l.pageId }).catch(() => {}); await loadFollows(); setFolBusy(false); };
+  const doAck = async (r) => { setFolBusy(true); await invoke('ack', { pageId: r.pageId }).catch(() => {}); await loadGuard(); setFolBusy(false); };
 
   const run = async () => {
     setLoading(true); setErr(null);
@@ -136,30 +163,34 @@ const App = () => {
 
   const ask = () => rovo.open({ ...AGENT, prompt: `Check ${issueKey} against our recorded decisions. Quote the decision and the part of ${issueKey} that conflicts, or say clearly that it does not conflict.` });
 
-  if (loading) return <Inline space="space.100" alignBlock="center"><Spinner size="small" /><Text>Comparing with recorded decisions...</Text></Inline>;
-  if (err) return <SectionMessage appearance="error" title="Check failed"><Text>{err}</Text><Button onClick={run}>Try again</Button></SectionMessage>;
-  const s = STATE[res.state] || STATE.clear;
+  const followed = (c) => !!(fol && fol.links.some((l) => l.pageId === c.pageId));
+  const retiredOpen = guard ? guard.retired.filter((r) => !r.checked).length : 0;
+  const head = retiredOpen ? { appearance: 'removed', label: 'Followed decision retired' }
+    : fol && fol.links.length ? { appearance: 'success', label: `Follows ${fol.links.length} ${fol.links.length === 1 ? 'decision' : 'decisions'}` }
+      : { appearance: 'default', label: 'Not linked to a decision' };
   return (
     <Stack space="space.150">
       <Inline space="space.100" alignBlock="center" spread="space-between">
-        <Lozenge appearance={s.appearance} isBold>{s.label}</Lozenge>
-        <Button appearance="subtle" onClick={run}>Re-check</Button>
+        <Lozenge appearance={head.appearance} isBold>{head.label}</Lozenge>
+        <Button appearance="subtle" onClick={() => { run(); loadFollows(); }}>Refresh</Button>
       </Inline>
-      {fol ? <Follows data={fol} onLink={doLink} onUnlink={doUnlink} busy={folBusy} /> : null}
-      <Text>{res.message}</Text>
-      {res.conflicts.map((c) => <DecisionCard key={c.pageId + (c.itemId || '')} c={c} kind="conflict" issueKey={issueKey} onFollow={doLink} followed={!!(fol && fol.links.some((l) => l.pageId === c.pageId))} />)}
-      {(res.possible || []).map((c) => <DecisionCard key={c.pageId + (c.itemId || '')} c={c} kind="possible" issueKey={issueKey} onFollow={doLink} followed={!!(fol && fol.links.some((l) => l.pageId === c.pageId))} />)}
-      {res.related.length ? <Heading as="h4">Related decisions</Heading> : null}
-      {res.related.map((c) => <DecisionCard key={c.pageId + (c.itemId || '')} c={c} kind="related" issueKey={issueKey} onFollow={doLink} followed={!!(fol && fol.links.some((l) => l.pageId === c.pageId))} />)}
-      {res.ignoredInactive.length ? (
-        <Text size="small" color="color.text.subtlest">
-          Ignored as no longer active: {res.ignoredInactive.map((d) => `${d.key || d.title} (${d.status}${d.supersededBy ? ', replaced by ' + d.supersededBy : ''})`).join('; ')}
-        </Text>
+      {guard ? <CloseWarning retired={guard.retired} onAck={doAck} busy={folBusy} /> : null}
+      {fol ? <Follows data={fol} onLink={doLink} onUnlink={doUnlink} busy={folBusy} /> : <Inline space="space.100" alignBlock="center"><Spinner size="small" /><Text>Reading followed decisions...</Text></Inline>}
+      <Heading as="h4">Explicit bans</Heading>
+      {loading ? <Inline space="space.100" alignBlock="center"><Spinner size="small" /><Text>Checking recorded bans...</Text></Inline> : null}
+      {!loading && err ? <SectionMessage appearance="error" title="Check failed"><Text>{err}</Text><Button onClick={run}>Try again</Button></SectionMessage> : null}
+      {!loading && res ? (
+        <Stack space="space.100">
+          {res.conflicts.length ? <Lozenge appearance="removed">Names something a decision bans</Lozenge> : null}
+          <Text size="small">{res.state === 'conflict' ? res.message : res.state === 'possible-conflict' || res.state === 'needs-judgment' ? (res.experimental ? res.message : 'No recorded ban is named here.') : res.message}</Text>
+          {res.conflicts.map((c) => <DecisionCard key={c.pageId + (c.itemId || '')} c={c} kind="conflict" issueKey={issueKey} onFollow={doLink} followed={followed(c)} />)}
+          {res.experimental && ((res.possible || []).length || res.related.length) ? <Heading as="h4">Experimental: matched by meaning</Heading> : null}
+          {res.experimental ? (res.possible || []).map((c) => <DecisionCard key={c.pageId + (c.itemId || '')} c={c} kind="possible" issueKey={issueKey} onFollow={doLink} followed={followed(c)} />) : null}
+          {res.experimental ? res.related.map((c) => <DecisionCard key={c.pageId + (c.itemId || '')} c={c} kind="related" issueKey={issueKey} onFollow={doLink} followed={followed(c)} />) : null}
+          {rovoOn ? <Inline><Button appearance="subtle" onClick={ask}>Ask the Decision Drift Guard agent</Button></Inline> : null}
+          <Text size="small" color="color.text.subtlest">{`${res.decisionCount} active decisions read. Bans are matched word for word in code, no AI.${res.experimental ? ' Experimental meaning check is on (set in Settings).' : ''}`}</Text>
+        </Stack>
       ) : null}
-      {rovoOn && (res.state === 'needs-judgment' || res.state === 'conflict' || res.state === 'possible-conflict') ? (
-        <Button appearance="primary" onClick={ask}>Ask the Decision Drift Guard agent</Button>
-      ) : null}
-      <Text size="small" color="color.text.subtlest">{res.decisionCount} active decisions checked (labelled pages, Decision template pages, inline decisions and title matches, set in the Decision Drift Guard settings page). Code only, no AI, for this check.</Text>
     </Stack>
   );
 };

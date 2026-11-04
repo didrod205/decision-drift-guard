@@ -23,13 +23,13 @@ const negs = JSON.parse(fs.readFileSync('negatives.json'));
 const clean = (s) => String(s || '').replace(/<!--[\s\S]*?-->/g, ' ');
 const res = { pos: [], neg: [] };
 for (const o of cands) { const exp = L.positives[o.n]; if (!exp) continue;
-  const r = core.checkIssue({ key: '#' + o.n, summary: o.title, description: clean(o.body) }, decs);
+  const r = core.checkIssue({ key: '#' + o.n, summary: o.title, description: clean(o.body) }, decs, { experimental: true });
   const want = exp.map((x) => 'ADR-' + x);
   const fl = [...r.conflicts, ...r.possible].map((x) => x.key), rel = r.related.map((x) => x.key);
   res.pos.push({ n: o.n, want, state: r.state, flagged: fl, related: rel, hitFlag: fl.some((k) => want.includes(k)), hitAny: [...fl, ...rel].some((k) => want.includes(k)), wrongFlag: fl.filter((k) => !want.includes(k)) });
 }
 for (const o of negs) {
-  const r = core.checkIssue({ key: '#' + o.n, summary: o.title, description: clean(o.body) }, decs);
+  const r = core.checkIssue({ key: '#' + o.n, summary: o.title, description: clean(o.body) }, decs, { experimental: true });
   res.neg.push({ n: o.n, state: r.state, flagged: [...r.conflicts, ...r.possible].map((x) => x.key), related: r.related.map((x) => x.key) });
 }
 const P = res.pos.length, N = res.neg.length, c = (a, f) => a.filter(f).length;

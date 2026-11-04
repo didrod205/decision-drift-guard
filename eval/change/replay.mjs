@@ -7,7 +7,7 @@ const C = await import('./.build/change.mjs');
 // Data folder made by history_fetch.py (versions/ and versions.json). Default: this folder.
 const ROOT = process.env.DDG_HISTORY || new URL('./', import.meta.url).pathname;
 const meta = JSON.parse(fs.readFileSync(ROOT + 'versions.json', 'utf8'));
-const out = { pairs: 0, files: 0, byKind: {}, retired: [], changedSample: [], perRepo: {} };
+const out = { trivialIgnored: [], pairs: 0, files: 0, byKind: {}, retired: [], changedSample: [], perRepo: {} };
 for (const [key, vers] of Object.entries(meta)) {
   out.files++;
   const repo = key.split('/').slice(0, 2).join('/');
@@ -19,11 +19,12 @@ for (const [key, vers] of Object.entries(meta)) {
     const r = C.compareVersions(a, b);
     out.pairs++; out.perRepo[repo].pairs++; out.perRepo[repo][r.kind]++;
     out.byKind[r.kind] = (out.byKind[r.kind] || 0) + 1;
-    const row = { file: key, commit: vers[i].url, date: vers[i].date, msg: vers[i].msg, kind: r.kind, from: r.fromStatus, to: r.toStatus, replacement: r.replacement, removed: r.removed.length, added: r.added.length };
+    const row = { file: key, commit: vers[i].url, date: vers[i].date, msg: vers[i].msg, kind: r.kind, from: r.fromStatus, to: r.toStatus, replacement: r.replacement, removed: r.removed.length, added: r.added.length, trivial: r.trivial || 0, rem: r.removed.map((x) => x.slice(0, 160)), add: r.added.map((x) => x.slice(0, 160)) };
+    if (r.kind === 'ignored' && r.trivial) (out.trivialIgnored = out.trivialIgnored || []).push(row);
     if (r.kind === 'retired') out.retired.push(row);
     else if (r.kind === 'changed' && out.changedSample.length < 400) out.changedSample.push(row);
   }
 }
-fs.writeFileSync(ROOT + 'replay_result.json', JSON.stringify(out, null, 1));
+fs.writeFileSync(ROOT + (process.env.OUT || 'replay_result.json'), JSON.stringify(out, null, 1));
 console.log(JSON.stringify({ files: out.files, pairs: out.pairs, byKind: out.byKind, perRepo: out.perRepo }));
 out.retired.forEach((r) => console.log('RETIRED', r.file, r.date.slice(0, 10), r.from, '->', r.to, '|', r.msg.slice(0, 60)));
