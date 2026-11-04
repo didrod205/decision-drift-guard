@@ -1,0 +1,109 @@
+modules:
+  jira:issueContext:
+    - key: decision-drift-guard-context
+      resource: main
+      resolver:
+        function: resolver
+      render: native
+      title: Decision Drift Guard
+      label: Decision check
+      icon: resource:icons;icon.svg
+  rovo:agent:
+    - key: decision-drift-guard-agent
+      name: Decision Drift Guard
+      description: Checks a Jira work item against the decisions your team recorded in Confluence and quotes the evidence.
+      prompt: resource:agent-prompt;agent.md
+      conversationStarters:
+        - Does this work item conflict with any recorded decision?
+        - Which decisions apply to checkout?
+        - List our active decisions
+      actions:
+        - get-decision-context
+        - list-decisions
+        - request-decision-reopen
+  action:
+    - key: get-decision-context
+      name: Get decision context
+      function: get-decision-context-fn
+      actionVerb: GET
+      description: Returns a Jira work item, a rule-based check against recorded decisions, and every active decision from Confluence (pages labelled "decision") with its outcome and Do not and Instead rules.
+      inputs:
+        issueKey:
+          title: Work item key
+          type: string
+          required: true
+          description: The Jira work item key, for example MOBL-12
+    - key: list-decisions
+      name: List decisions
+      function: list-decisions-fn
+      actionVerb: GET
+      description: Lists decision pages recorded in Confluence (label "decision"), optionally filtered by a word.
+      inputs:
+        query:
+          title: Filter word
+          type: string
+          required: false
+          description: Optional word to filter decisions, for example checkout
+    - key: request-decision-reopen
+      name: Request decision reopen
+      function: reopen-decision-fn
+      actionVerb: CREATE
+      description: Posts a reopen request as a comment on a Confluence decision page, linked to the Jira work item. The decision page body is not changed.
+      inputs:
+        issueKey:
+          title: Work item key
+          type: string
+          required: true
+          description: The Jira work item that needs the decision changed
+        pageId:
+          title: Decision page id
+          type: string
+          required: true
+          description: The Confluence page id of the decision (pageId from the decision context)
+        reason:
+          title: Reason
+          type: string
+          required: true
+          description: Why the decision should be reconsidered
+  trigger:
+    - key: on-issue-created
+      function: on-issue-created-fn
+      events:
+        - avi:jira:created:issue
+  function:
+    - key: resolver
+      handler: index.handler
+    - key: get-decision-context-fn
+      handler: index.getDecisionContext
+    - key: list-decisions-fn
+      handler: index.listDecisions
+    - key: reopen-decision-fn
+      handler: index.reopenDecision
+    - key: on-issue-created-fn
+      handler: index.onIssueCreated
+resources:
+  - key: main
+    path: src/frontend/index.jsx
+  - key: agent-prompt
+    path: prompts
+  - key: icons
+    path: static
+permissions:
+  scopes:
+    - read:jira-work
+    - write:jira-work
+    - search:confluence
+    - read:confluence-content.all
+    - read:page:confluence
+    - write:comment:confluence
+app:
+  runtime:
+    name: nodejs24.x
+    memoryMB: 256
+    architecture: arm64
+  id: ari:cloud:ecosystem::app/b2e80cfa-2352-4a1e-90e0-c5ed2ec66634
+  compatibility:
+    jira:
+      required: true
+    confluence:
+      required: false

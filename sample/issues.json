@@ -1,0 +1,12 @@
+[
+ {"s":"Cache card details locally for faster checkout","d":"Returning users complain that checkout is slow. Proposal: cache card details on the device and store card number encrypted so the form is pre-filled next time.","expect":"conflict DEC-001"},
+ {"s":"Add SMS OTP as a login fallback","d":"When the magic link email is delayed, offer SMS OTP so users can still sign in.","expect":"conflict DEC-004"},
+ {"s":"Integrate a third-party analytics SDK for funnel tracking","d":"Marketing wants funnel dashboards this sprint. Add a third-party analytics SDK and enable session replay on the onboarding screens.","expect":"conflict DEC-002"},
+ {"s":"Let users get a 6-digit code by text to sign in","d":"Some users wait minutes for the email. Let them request a 6-digit code sent to their phone number and type it in to sign in.","expect":"related DEC-004 (no exact phrase, agent should flag)"},
+ {"s":"Support iOS 15 for an enterprise customer","d":"A large customer still has 300 devices on iOS 15. Request: support iOS 15 in the next release.","expect":"conflict DEC-003"},
+ {"s":"Improve checkout button loading state","d":"Show a spinner and disable the pay button while the payment request is in flight.","expect":"related DEC-001, no conflict"},
+ {"s":"Allow offline edits to note drafts","d":"Users want to keep writing notes on the subway. Allow offline edits to drafts and sync on reconnect.","expect":"superseded DEC-006 ignored, DEC-007 related, no conflict"},
+ {"s":"Roll out the new onboarding with a hardcoded toggle","d":"To save time, ship the new onboarding behind a hardcoded toggle in the build config.","expect":"conflict DEC-005"},
+ {"s":"Update app icon for dark mode","d":"Design delivered a new icon set with a dark variant.","expect":"no related decision"},
+ {"s":"Fix","d":"","expect":"not enough detail"}
+]
