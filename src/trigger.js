@@ -6,7 +6,7 @@ export const onIssueCreated = async (event) => {
   const key = event && event.issue && event.issue.key;
   if (!key) return;
   try {
-    const [issue, decisions] = await Promise.all([getIssue(key), fetchDecisions()]);
+    const [issue, decisions] = await Promise.all([getIssue(key, 'app'), fetchDecisions('app')]);
     const result = checkIssue(issue, decisions);
     console.log(`DDG ${key} state=${result.state} conflicts=${result.conflicts.length} related=${result.related.length}`);
     if (result.state === 'conflict') {

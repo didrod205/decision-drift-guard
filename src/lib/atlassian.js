@@ -2,10 +2,12 @@ import api, { route } from '@forge/api';
 import { DECISION_LABEL, parseDecisionPage, adfToText } from './core';
 
 // All decision pages (label "decision") from Confluence on the same site.
-export const fetchDecisions = async () => {
+// as: 'user' (UI and Rovo: respects the viewer's permissions) or 'app' (event trigger)
+const who = (as) => (as === 'app' ? api.asApp() : api.asUser());
+
+export const fetchDecisions = async (as = 'user') => {
   const cql = `type=page and label="${DECISION_LABEL}" order by lastmodified desc`;
-  const res = await api
-    .asApp()
+  const res = await who(as)
     .requestConfluence(route`/wiki/rest/api/content/search?cql=${cql}&limit=100&expand=body.storage,version`);
   if (!res.ok) {
     const t = await res.text();
@@ -24,9 +26,8 @@ export const fetchDecisions = async () => {
   );
 };
 
-export const getIssue = async (key) => {
-  const res = await api
-    .asApp()
+export const getIssue = async (key, as = 'user') => {
+  const res = await who(as)
     .requestJira(route`/rest/api/3/issue/${key}?fields=summary,description,labels,status,project`);
   if (!res.ok) throw new Error(`Jira issue ${key} not readable (${res.status})`);
   const j = await res.json();
@@ -80,10 +81,10 @@ export const addIssueLabel = async (issueKey, label) => {
 };
 
 // Reopen request = footer comment on the decision page. The decision body stays untouched.
-export const requestReopen = async ({ pageId, issueKey, issueUrl, reason, who }) => {
+export const requestReopen = async ({ pageId, issueKey, issueUrl, reason }) => {
   const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const value = `<p><strong>Reopen requested</strong> from work item <a href="${esc(issueUrl)}">${esc(issueKey)}</a>${who ? ' by ' + esc(who) : ''}.</p><p>Reason: ${esc(reason || 'Not given')}</p><p><em>Posted by Decision Drift Guard. The decision above was not modified.</em></p>`;
-  const res = await api.asApp().requestConfluence(route`/wiki/api/v2/footer-comments`, {
+  const value = `<p><strong>Reopen requested</strong> from work item <a href="${esc(issueUrl)}">${esc(issueKey)}</a>.</p><p>Reason: ${esc(reason || 'Not given')}</p><p><em>Posted by Decision Drift Guard. The decision above was not modified.</em></p>`;
+  const res = await api.asUser().requestConfluence(route`/wiki/api/v2/footer-comments`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify({ pageId: String(pageId), body: { representation: 'storage', value } }),
