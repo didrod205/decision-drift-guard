@@ -56,7 +56,7 @@ const DecisionCard = ({ c, kind, issueKey }) => {
           <Text><Strong>Shared topic: </Strong>{c.matchedScope.join(', ')}</Text>
         )}
         {c.instead ? <Text><Strong>Instead: </Strong>{c.instead}</Text> : null}
-        <Text size="small" color="color.text.subtlest">{c.status}{c.decidedOn ? ` since ${c.decidedOn}` : ''}</Text>
+        <Text size="small" color="color.text.subtlest">{c.status === 'Unknown' ? 'No status field' : c.status}{c.decidedOn ? ` since ${c.decidedOn}` : ''}</Text>
         {done ? <Text>{done}</Text> : open ? (
           <Stack space="space.050">
             <TextArea placeholder="Why should this decision be reconsidered?" value={reason} onChange={(e) => setReason(e.target.value)} />

@@ -80,7 +80,7 @@ const card = (c, possible) => ({
     type: 'paragraph',
     content: [
       linkText(c.title, c.url),
-      t(` (${c.status}${c.decidedOn ? ', ' + c.decidedOn : ''}). `),
+      t(c.status && c.status !== 'Unknown' ? ` (${c.status}${c.decidedOn ? ', ' + c.decidedOn : ''}). ` : '. '),
       t(c.evidence && c.evidence.rule ? `${possible ? 'Decision rule' : 'Rule broken'}: ${c.evidence.rule.replace(/^Do not: /, 'Do not ')}. ` : ''),
       t(c.evidence && c.evidence.issueQuote ? `This item says: "${c.evidence.issueQuote}". ` : ''),
       t(possible && c.evidence && c.evidence.readAs && c.evidence.readAs.length ? `Matched by meaning: ${c.evidence.readAs.join('; ')}. ` : ''),
