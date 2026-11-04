@@ -220,6 +220,9 @@ export const compileDecision = (d, lex) => {
       if (extra.length) { rules.push({ concepts, stems: extra, label, markers: new Set(), mixed: true }); return; }
     }
     if (!concepts.size) {
+      // code names such as React.FC: every part counts, even two-letter ones
+      const dotted = String(fromText).match(/\b[A-Za-z]+\.[A-Za-z]+\b/g) || [];
+      if (dotted.length) { dotted.forEach((x) => rules.push({ concepts: new Set(), stems: phraseToks(x), label, markers: new Set() })); return; }
       const stems = [...new Set(contentStems(fromText))].sort((a, b) => b.length - a.length).slice(0, 3);
       if (stems.length >= 2) rules.push({ concepts: new Set(), stems, label, markers: new Set() });
       return;
@@ -230,6 +233,7 @@ export const compileDecision = (d, lex) => {
   };
   for (const p of d.donot || []) pushRule(conceptSet(p, lex), `Do not: ${p}`, p);
   for (const pr of prohibitionsFrom(d.outcome || '')) {
+    pr.clause = pr.clause.split(/\b(?:except|unless|other than|apart from)\b/i)[0];
     const parts = pr.clause.split(/,|\bor\b|\band\b/i).map((x) => x.trim()).filter(Boolean);
     const whole = conceptSet(pr.clause, lex);
     const verbs = [...whole].filter((c) => VERB_CONCEPTS.has(c));
@@ -314,7 +318,9 @@ export const semanticCheck = (raw, tokens, mentions, compiled) => {
   // 2. concept rules
   for (const r of compiled.rules) {
     if (r.stems.length) {
-      if (r.stems.every((s) => stemsPresent.has(s)) && [...r.concepts].every((c) => present.has(c))) {
+      // words-only rules: the words must sit close together (within 4 words), not anywhere in a long text
+      const near = r.concepts.size > 0 || tokens.some((t, i) => !t.neg && t.s === r.stems[0] && r.stems.every((x) => tokens.slice(Math.max(0, i - 4), i + 5).some((u) => u.s === x && !u.neg)));
+      if (near && r.stems.every((s) => stemsPresent.has(s)) && [...r.concepts].every((c) => present.has(c))) {
         const t = tokens.find((x) => x.s === r.stems[0] && !x.neg);
         const cw = [...r.concepts].map((c) => present.get(c)).map((u) => `"${raw.slice(u.start, u.end)}" read as ${u.concepts.join('/')}`);
         return { ...out, level: 'possible', rule: r.label, quote: cut(raw, t.start, t.end), why: cw.concat(r.stems.map((x) => `same word "${x}"`)) };
