@@ -24,7 +24,7 @@ const App = () => {
         <Button onClick={load}>Refresh</Button>
       </Inline>
       <Text>Every time a work item was found to conflict, or possibly conflict, with a recorded decision, and every reopen request. Kept in this app's own storage on Atlassian; decision pages are never edited.</Text>
-      <Text><Strong>{ids.length}</Strong> decisions drifted from, <Strong>{issues.size}</Strong> work items flagged, <Strong>{reopens}</Strong> reopen requests.</Text>
+      <Text><Strong>{ids.length}</Strong> {ids.length === 1 ? 'decision' : 'decisions'} drifted from, <Strong>{issues.size}</Strong> {issues.size === 1 ? 'work item' : 'work items'} flagged, <Strong>{reopens}</Strong> {reopens === 1 ? 'reopen request' : 'reopen requests'}.</Text>
       {ids.length === 0 ? <SectionMessage appearance="information"><Text>Nothing yet. Create a work item that goes against a decision, or use Create sample data in the settings page.</Text></SectionMessage> : null}
       {ids.map((id) => {
         const rows = groups[id];
