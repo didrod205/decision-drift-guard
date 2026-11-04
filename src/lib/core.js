@@ -36,6 +36,9 @@ const stripTags = (html) =>
     .replace(/\s+/g, ' ')
     .trim();
 
+// A sentence that states a decision (used only when a page has no Decision or Outcome heading)
+export const DECISION_SENTENCE = /\b(we will|we'll|we have decided|we've decided|we decided|a decision was made|we chose|we have chosen|we are going to|we adopt|we have adopted|is the standard|should be (named|used|on the following form)|must be used|we use)\b/i;
+
 // Reads "Decision summary" style tables: <tr><th>Key</th><td>Value</td></tr>
 export const parseDecisionPage = (page) => {
   const html = page.body || '';
@@ -51,6 +54,22 @@ export const parseDecisionPage = (page) => {
   // Confluence "Decision documentation" template: free text under the "Outcome" heading
   const sec = /<h[1-3][^>]*>(?:(?!<\/h[1-3]>)[\s\S])*?(Outcome|Decision)\s*<\/h[1-3]>([\s\S]*?)(?=<h[1-3]|$)/i.exec(html);
   const sectionText = sec ? stripTags(sec[2]) : '';
+  // Options the team weighed: "Considered options", "Alternatives", "Options" sections
+  const altRe = /<h[1-4][^>]*>((?:(?!<\/h[1-4]>)[\s\S])*?)<\/h[1-4]>([\s\S]*?)(?=<h[1-4]|$)/gi;
+  const alternativesText = [];
+  let am;
+  while ((am = altRe.exec(html))) {
+    if (/^\s*(considered (options|alternatives)|options considered|alternatives( considered)?|other options|rejected (options|alternatives)|options)\s*$/i.test(stripTags(am[1]))) alternativesText.push(stripTags(am[2]));
+  }
+  // No Decision/Outcome heading: read the first sentence that states a decision, plus the two after it
+  let fallback = '';
+  if (!sectionText) {
+    const all = stripTags(html).split(/(?<=[.!?])\s+/);
+    let i = all.findIndex((x) => DECISION_SENTENCE.test(x));
+    // "a decision was made." only says that there is a decision: read what follows it
+    if (i >= 0 && /a decision was made\.?\s*$/i.test(all[i])) i += 1;
+    if (i >= 0 && i < all.length) fallback = all.slice(i, i + 3).join(' ');
+  }
   return {
     pageId: page.id,
     key: idMatch ? idMatch[1] : null,
@@ -58,7 +77,8 @@ export const parseDecisionPage = (page) => {
     url: page.url,
     status,
     active: !INACTIVE.test(status),
-    outcome: fields.outcome || fields.decision || sectionText,
+    outcome: fields.outcome || fields.decision || sectionText || fallback,
+    alternatives: [fields['considered options'] || fields.alternatives || fields.options || '', ...alternativesText].filter(Boolean).join(' '),
     source: page.source || 'label',
     applies: splitTerms(fields['applies to'] || fields.scope || ''),
     donot: splitTerms(fields['do not'] || fields.avoid || ''),
@@ -132,10 +152,12 @@ export const decisionsFromPage = (page) => {
   return list.concat(items);
 };
 
-export const MIN_SCORE = 0.2;
+export const MIN_SCORE = 0.25;
+export const MIN_DISTINCT = 2;
 
 export const checkIssue = (issue, decisionsAll, opts = {}) => {
-  const raw = `${issue.summary || ''}. ${issue.description || ''} ${(issue.labels || []).filter((l) => !/^decision-(drift|reopen)/.test(l)).join(' ')}`.trim();
+  const prs = (issue.linkedPRs || []).map((p) => `Linked pull request: ${p.title}.`).join(' ');
+  const raw = `${issue.summary || ''}. ${issue.description || ''} ${prs} ${(issue.labels || []).filter((l) => !/^decision-(drift|reopen)/.test(l)).join(' ')}`.trim();
   const text = norm(raw);
   const words = text.trim().split(' ').filter(Boolean).length;
   const active = decisionsAll.filter((d) => d.active);
@@ -179,8 +201,11 @@ export const checkIssue = (issue, decisionsAll, opts = {}) => {
       base.possible.push({ ...card, evidence: { rule: sem.rule, issueQuote: sem.quote, readAs: sem.why } });
       return;
     }
-    if (a.length || scores[i] >= MIN_SCORE || sem.followsInstead) {
-      if (!a.length) card.matchedScope = sem.followsInstead ? ['matches the agreed alternative'] : [`text overlap ${Math.round(scores[i] * 100)}%`];
+    // a card from word overlap alone needs enough overlap AND at least MIN_DISTINCT words that only this decision uses
+    const distinct = (scores.distinct && scores.distinct[i]) || [];
+    const overlapCard = scores[i] >= MIN_SCORE && distinct.length >= MIN_DISTINCT;
+    if (a.length || overlapCard || sem.followsInstead) {
+      if (!a.length) card.matchedScope = sem.followsInstead ? ['matches the agreed alternative'] : [`text overlap ${Math.round(scores[i] * 100)}%, shared words only this decision uses: ${distinct.slice(0, 4).join(', ')}`];
       base.related.push(card);
     }
   });

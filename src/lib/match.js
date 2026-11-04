@@ -26,8 +26,74 @@ const VENDORS = {
   'hotjar|fullstory|smartlook|logrocket|uxcam|clarity': ['thirdparty', 'analytics', 'sdk', 'replay'],
   'build flag|compile flag|build time flag': ['hardcoded', 'flag'],
 };
+// Small fixed list of tools that compete for the same job. Only common categories; a team adds
+// its own pairs through the settings page instead of this list growing.
+export const COMPETING = {
+  'date library': ['moment', 'moment js', 'luxon', 'date fns', 'dayjs', 'day js'],
+  'state management': ['redux', 'mobx', 'mobx state tree', 'zustand', 'recoil', 'jotai', 'xstate', 'vuex', 'pinia', 'ngrx'],
+  'test runner': ['jest', 'mocha', 'vitest', 'jasmine', 'ava', 'karma'],
+  'package manager': ['npm', 'yarn', 'pnpm'],
+  'HTTP client': ['axios', 'node fetch', 'cross fetch', 'isomorphic fetch', 'superagent', 'ky'],
+  bundler: ['webpack', 'rollup', 'vite', 'esbuild', 'parcel'],
+  'CSS-in-JS': ['styled components', 'emotion', 'jss'],
+};
+const phraseToks = (p) => String(p).split(/[^A-Za-z0-9]+/).filter(Boolean).map(stem);
+const findPhrase = (tokens, toks, wantNeg) => {
+  for (let i = 0; i + toks.length <= tokens.length; i++) {
+    if (toks.every((x, k) => tokens[i + k].s === x) && (wantNeg === undefined || tokens[i].neg === wantNeg)) return i;
+  }
+  return -1;
+};
+const CHOICE = /\b(use|uses|used|using|adopt|adopted|standard|chose|choose|chosen|prefer|go with|switch to|move to|migrate to|select|selected|mocked by)\b/i;
+const AGAINST = /\b(?:instead of|rather than|in favou?r of [^.]*? over|over|replac(?:e|es|ing) |move away from|get rid of|not)\s+(?:the\s+|using\s+|a\s+)?([A-Za-z][A-Za-z0-9.\-]*(?:\s+[A-Za-z][A-Za-z0-9.\-]*){0,2})/gi;
+
+// "Use X" decisions: what was chosen, and the options it was chosen over.
+export const competingFrom = (outcome, alternatives) => {
+  const toks = tokenize(outcome || '');
+  const sentences = String(outcome || '').split(/(?<=[.!?])\s+|\n+/);
+  const names = [];
+  for (const [cat, list] of Object.entries(COMPETING)) list.forEach((p) => names.push({ cat, p, toks: phraseToks(p) }));
+  names.sort((a, b) => b.toks.length - a.toks.length);
+  const inText = (text) => { const t = tokenize(text); const got = []; const used = new Set();
+    for (const n of names) { const i = findPhrase(t, n.toks); if (i >= 0 && !used.has(i)) { used.add(i); got.push(n); } } return got; };
+  // chosen = a listed tool that is the object of a choice verb ("use Luxon", "use the node-fetch package")
+  let chosen = [];
+  const FILL = new Set(['the', 'a', 'an', 'native', 'standard']);
+  for (const sent of sentences) {
+    if (!CHOICE.test(sent)) continue;
+    const t = tokenize(sent.split(/\b(?:instead of|rather than|over|not)\b/i)[0]);
+    for (let i = 0; i < t.length && !chosen.length; i++) {
+      if (!CHOICE.test(t[i].w) && !(t[i].w === 'by' && t[i + 1] && t[i + 1].w === 'using')) continue;
+      let j = i + 1; if (t[j] && t[j].w === 'using') j++;
+      let skip = 0; while (t[j] && FILL.has(t[j].w) && skip < 2) { j++; skip++; }
+      for (const n of names) if (n.toks.every((x, k) => t[j + k] && t[j + k].s === x)) { chosen = [n]; break; }
+    }
+    if (chosen.length) break;
+  }
+  if (!chosen.length) return null;
+  const chosenSet = new Set(chosen.map((c) => c.p));
+  const out = new Map();
+  const add = (p, why) => { const k = phraseToks(p).join(' '); if (!k || chosen.some((c) => c.toks.join(' ') === k) || out.has(k)) return; out.set(k, { phrase: p, toks: phraseToks(p), why }); };
+  const cats = new Set(chosen.map((c) => c.cat));
+  for (const n of names) if (cats.has(n.cat) && !chosenSet.has(n.p)) add(n.p, `another ${n.cat}`);
+  const altText = `${outcome || ''} ${alternatives || ''}`;
+  let m;
+  AGAINST.lastIndex = 0;
+  while ((m = AGAINST.exec(altText))) {
+    const words = m[1].split(/\s+/).filter((w) => !STOP.has(w.toLowerCase()));
+    if (!words.length) continue;
+    const named = inText(m[1]);
+    if (named.length) named.forEach((n) => add(n.p, 'named in the decision as the option not taken'));
+    else if (words.length <= 2 && words.join(' ').length >= 4 && /[A-Z.\-]|js$/.test(words.join(' '))) add(words.join(' '), 'named in the decision as the option not taken');
+  }
+  for (const n of inText(alternatives || '')) add(n.p, 'listed under the options the decision considered');
+  void toks;
+  return { chosen: chosen.map((c) => c.p), category: [...cats].join(', '), competitors: [...out.values()] };
+};
+
+const ARTICLE = new Set(['the', 'a', 'an', 'this', 'that', 'at', 'one', 'every', 'any', 'each', 'some']);
 const VERB_CONCEPTS = new Set(['store']);
-const NEGATORS = new Set(['no', 'not', 'never', 'without', 'remov', 'drop', 'stop', 'avoid', 'instead', 'disabl', 'delet', 'block', 'prevent', 'ban', 'forbid', 'don', 'doesn', 'didn', 'won', 'isn', 'aren', 'cannot', 'deprecat', 'uninstall', 'replac', 'migrat']);
+const NEGATORS = new Set(['no', 'not', 'never', 'without', 'remov', 'drop', 'stop', 'avoid', 'instead', 'disabl', 'delet', 'block', 'prevent', 'ban', 'forbid', 'don', 'doesn', 'didn', 'won', 'isn', 'aren', 'cannot', 'deprecat', 'uninstall', 'replac', 'migrat', 'rid', 'away']);
 const BREAKS = new Set(['and', 'but', 'then', 'so', 'when', 'while', 'because', 'for', 'to', 'so', 'if', 'or', 'with']);
 const STOP = new Set('a an the of to in on for with and or but is are be by at as it its this that from we our us you your they them their can will should would must not no do does new add use using make let all any so than then into out up about more less only also just via over per each every when while after before there here what which who how get got set has have had was were'.split(' '));
 
@@ -115,8 +181,12 @@ export const prohibitionsFrom = (sentenceText) => {
   const sentences = String(sentenceText || '').split(/(?<=[.!?])\s+|\n+/);
   for (const s of sentences) {
     let m;
-    const re1 = /\b(?:never|do not|does not|don't|doesn't|will not|won't|must not|may not|cannot|can't|are not allowed to|is not allowed to)\s+(.+?)(?:[.;]|$)/gi;
+    const re1 = /\b(?:never|do not|does not|don't|doesn't|will not|won't|must not|may not|should not|shouldn't|avoid|avoid using|cannot|can't|are not allowed to|is not allowed to)\s+(.+?)(?:[.;]|$)/gi;
     while ((m = re1.exec(s))) out.push({ clause: m[1], sentence: s.trim() });
+    const re1b = /\b(?:stop using|stop|no longer use)\s+(.+?)(?:[.;]|$)/gi;
+    while ((m = re1b.exec(s))) out.push({ clause: m[1], sentence: s.trim() });
+    const re1c = /^(.+?)\s+should be avoided\b/i.exec(s);
+    if (re1c) out.push({ clause: re1c[1].replace(/^.*\bthat\s+/i, ''), sentence: s.trim() });
     const re2 = /\bno\s+(.+?)(?:[.;]|$)/gi;
     while ((m = re2.exec(s))) out.push({ clause: m[1], sentence: s.trim() });
     const re3 = /^(.+?)\s+(?:are|is)\s+not\s+(?:used|allowed|permitted|accepted|supported)\b/i.exec(s);
@@ -176,6 +246,7 @@ export const compileDecision = (d, lex) => {
   }
   return {
     rules,
+    competing: competingFrom(d.outcome || '', d.alternatives || ''),
     minVersions: minVersionsFrom(`${d.outcome || ''} ${(d.donot || []).join(', ')}`),
     scopeConcepts: conceptSet((d.applies || []).join(', '), lex),
     scopeTerms: (d.applies || []).map((a) => a.toLowerCase()),
@@ -224,6 +295,21 @@ export const semanticCheck = (raw, tokens, mentions, compiled) => {
     }
   }
   if (insteadOverlap >= 0.5) return { ...out, followsInstead: true };
+  // 1b. the decision chose X; the work item brings in a competing option (not "remove"/"replace" it)
+  if (compiled.competing) {
+    for (const c of compiled.competing.competitors) {
+      let i = -1;
+      for (let k = 0; k + c.toks.length <= tokens.length; k++) {
+        if (!c.toks.every((x, q) => tokens[k + q].s === x) || tokens[k].neg) continue;
+        if (k > 0 && ARTICLE.has(tokens[k - 1].w) && c.toks.length === 1) continue; // "at the moment", "an emotion"
+        i = k; break;
+      }
+      if (i < 0) continue;
+      const t0 = tokens[i]; const t1 = tokens[i + c.toks.length - 1];
+      const ch = compiled.competing.chosen.join(' / ');
+      return { ...out, level: 'possible', competing: true, rule: `The decision chose ${ch}; ${c.phrase} is ${c.why}`, quote: cut(raw, t0.start, t1.end), why: [`"${raw.slice(t0.start, t1.end)}" is ${c.why} (decision chose ${ch})`] };
+    }
+  }
   // 2. concept rules
   for (const r of compiled.rules) {
     if (r.stems.length) {
@@ -255,12 +341,15 @@ export const overlapScores = (raw, decisions) => {
   const N = docs.length || 1;
   const idf = (w) => Math.log(1 + N / (df.get(w) || N));
   const q = new Set(contentStems(raw));
-  return docs.map((ws) => {
+  const scores = docs.map((ws) => {
     const set = new Set(ws);
     let num = 0; let den = 0;
     set.forEach((w) => { const x = idf(w); den += x; if (q.has(w)) num += x; });
     return den ? num / den : 0;
   });
+  // words the work item shares with only this decision (not with the other decisions)
+  scores.distinct = docs.map((ws) => [...new Set(ws)].filter((w) => q.has(w) && w.length > 3 && df.get(w) === 1 && !STOP.has(w)));
+  return scores;
 };
 
 // True if the phrase appears in the text at least once outside a negation ("remove the X", "without X").

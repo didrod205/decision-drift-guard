@@ -48,7 +48,20 @@ export const getIssue = async (key, as = 'user') => {
     .requestJira(route`/rest/api/3/issue/${key}?fields=summary,description,labels,status,project`);
   if (!res.ok) throw new Error(`Jira issue ${key} not readable (${res.status})`);
   const j = await res.json();
+  // Pull requests linked to the work item as remote links (title + URL only; diffs are not read).
+  let linkedPRs = [];
+  try {
+    const rl = await who(as).requestJira(route`/rest/api/3/issue/${key}/remotelink`);
+    if (rl.ok) {
+      linkedPRs = (await rl.json())
+        .map((x) => x.object || {})
+        .filter((o) => o.title && /\/pull\/\d|\/pull-requests\/\d|\/merge_requests\/\d/.test(o.url || ''))
+        .slice(0, 10)
+        .map((o) => ({ title: String(o.title).slice(0, 200), url: o.url }));
+    }
+  } catch (e) { linkedPRs = []; }
   return {
+    linkedPRs,
     key: j.key,
     summary: j.fields.summary || '',
     description: adfToText(j.fields.description).trim(),
