@@ -1,0 +1,1267 @@
+{
+ "sum": {
+  "decisions": 11,
+  "positives": 64,
+  "caughtFlag": 0,
+  "caughtAnyCard": 10,
+  "posWrongFlag": 0,
+  "negatives": 56,
+  "negFlagged": 1,
+  "negAnyCard": 19
+ },
+ "pos": [
+  {
+   "n": 24590,
+   "want": [
+    "ADR-013",
+    "ADR-014"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007",
+    "ADR-011",
+    "ADR-013"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 4457,
+   "want": [
+    "ADR-009"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 4454,
+   "want": [
+    "ADR-002"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 2091,
+   "want": [
+    "ADR-009"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-003"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3148,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 2271,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 2131,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 2623,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3086,
+   "want": [
+    "ADR-003",
+    "ADR-004"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 2559,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 1660,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3121,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 2791,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 31829,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-003",
+    "ADR-006",
+    "ADR-007",
+    "ADR-010",
+    "ADR-011",
+    "ADR-013",
+    "ADR-014",
+    "ADR-015"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 14840,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 27984,
+   "want": [
+    "ADR-013",
+    "ADR-014"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 27843,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 24880,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 26275,
+   "want": [
+    "ADR-013",
+    "ADR-014"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 23023,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 24729,
+   "want": [
+    "ADR-013",
+    "ADR-014"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 23191,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 20007,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 18862,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006",
+    "ADR-007"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 19645,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 19881,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 18010,
+   "want": [
+    "ADR-012"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-003",
+    "ADR-004",
+    "ADR-011"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 17875,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 13634,
+   "want": [
+    "ADR-012"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 12180,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 10817,
+   "want": [
+    "ADR-002"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 9459,
+   "want": [
+    "ADR-010",
+    "ADR-012"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 9289,
+   "want": [
+    "ADR-007"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006",
+    "ADR-007"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 9816,
+   "want": [
+    "ADR-010",
+    "ADR-012"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 8912,
+   "want": [
+    "ADR-010",
+    "ADR-012",
+    "ADR-011"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-013"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 7998,
+   "want": [
+    "ADR-012"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006",
+    "ADR-007"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 7780,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 7889,
+   "want": [
+    "ADR-010",
+    "ADR-012"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 7426,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 7174,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-004",
+    "ADR-005",
+    "ADR-006",
+    "ADR-011",
+    "ADR-012",
+    "ADR-013",
+    "ADR-015"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 6882,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 7484,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 6458,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 5330,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 5501,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-012"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 6375,
+   "want": [
+    "ADR-007",
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 5642,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006",
+    "ADR-011"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 5168,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3729,
+   "want": [
+    "ADR-006",
+    "ADR-007"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 6016,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 4967,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 5350,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 4580,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 4416,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007",
+    "ADR-010"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 5299,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 4515,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-003",
+    "ADR-006",
+    "ADR-007",
+    "ADR-011",
+    "ADR-013",
+    "ADR-014"
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": []
+  },
+  {
+   "n": 5114,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3249,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3669,
+   "want": [
+    "ADR-007"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3226,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3329,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3349,
+   "want": [
+    "ADR-002",
+    "ADR-009"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3317,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  },
+  {
+   "n": 3448,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": []
+  }
+ ],
+ "neg": [
+  {
+   "n": 3193,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 3194,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-010"
+   ]
+  },
+  {
+   "n": 3195,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006",
+    "ADR-010"
+   ]
+  },
+  {
+   "n": 3201,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 5194,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 5196,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 5198,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-011"
+   ]
+  },
+  {
+   "n": 5207,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-013",
+    "ADR-014"
+   ]
+  },
+  {
+   "n": 7024,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 7026,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 7027,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 7031,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 9869,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-011",
+    "ADR-013"
+   ]
+  },
+  {
+   "n": 9874,
+   "state": "possible-conflict",
+   "flagged": [
+    "ADR-015"
+   ],
+   "related": []
+  },
+  {
+   "n": 9889,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 9896,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 17590,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 17593,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 17594,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007",
+    "ADR-011",
+    "ADR-012"
+   ]
+  },
+  {
+   "n": 17595,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ]
+  },
+  {
+   "n": 26403,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 26404,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007",
+    "ADR-011"
+   ]
+  },
+  {
+   "n": 26405,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ]
+  },
+  {
+   "n": 26408,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 30103,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-003",
+    "ADR-011"
+   ]
+  },
+  {
+   "n": 30106,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 30107,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 30108,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 3191,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007"
+   ]
+  },
+  {
+   "n": 3196,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-015"
+   ]
+  },
+  {
+   "n": 3197,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-011"
+   ]
+  },
+  {
+   "n": 3198,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 5195,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 5197,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 5199,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 5200,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 7022,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006"
+   ]
+  },
+  {
+   "n": 7023,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 7025,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 7028,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 9861,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007"
+   ]
+  },
+  {
+   "n": 9862,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 9863,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 9864,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006",
+    "ADR-007",
+    "ADR-013",
+    "ADR-014"
+   ]
+  },
+  {
+   "n": 17589,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 17591,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 17592,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 17597,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 26406,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 26407,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 26409,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 26410,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 30102,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-006",
+    "ADR-007"
+   ]
+  },
+  {
+   "n": 30104,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007"
+   ]
+  },
+  {
+   "n": 30105,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  },
+  {
+   "n": 30109,
+   "state": "clear",
+   "flagged": [],
+   "related": []
+  }
+ ]
+}

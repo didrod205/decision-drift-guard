@@ -23,6 +23,10 @@
 ## Measured (development numbers)
 `node eval/run.mjs` runs the matcher on two sets of test work items against the 7 sample decisions. Set 1 (written before the matcher, then used for tuning): 24 of 24 paraphrases caught, 0 of 16 false flags. Set 2 (written after tuning, not tuned on): 13 of 16 caught, 2 of 16 false flags; 14 of 16 and 2 of 16 when decisions are free sentences only. The word-for-word check alone caught 0 of the paraphrases in either set. Both sets were written by the same AI that wrote the matcher.
 
+
+## Field test on third-party data (run once, not tuned)
+`eval/real/` measures the matcher on the open source Backstage project: its 14 ADRs (ADR002 to ADR015, Apache-2.0, copied unchanged in `eval/real/adr/` with a NOTICE) against real GitHub issues and pull requests. Ground truth comes from the maintainers themselves: 64 items where a comment links a specific ADR because the work went against it (each keeps the comment URL), plus 56 unrelated closed items. Reading title and description only, the app commented with the right ADR on 0 of 64 and showed it as a "Needs judgment" card on 10 of 64; it commented on 1 of 56 unrelated items. In 54 of the 64 the conflict was pointed out only in inline code review, so it lived in the diff, and most ADRs state "use X" rather than "never Y". The app today catches drift stated in the work item against a decision with an explicit prohibition. Full method and numbers: `eval/real/README.md`.
+
 ## Data
 No egress, no external AI. Settings and the audit trail (work item keys, decision titles and links, quoted evidence) are kept in Forge storage on Atlassian. See [PRIVACY.md](PRIVACY.md).
 

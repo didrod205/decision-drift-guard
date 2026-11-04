@@ -8,7 +8,7 @@ Decision Drift Guard is an Atlassian Forge app. It runs entirely on Atlassian's 
 - **What it writes:** a Jira comment and the label `decision-drift` (or `decision-drift-possible`) when a new work item conflicts or possibly conflicts with a recorded decision; sample decision pages and work items only when an admin clicks Create sample data; a Confluence footer comment and the Jira label `decision-reopen-requested` when a user asks to reopen a decision. It never edits a decision page.
 - **What it stores:** in Forge key-value storage on Atlassian: the app settings, and an audit trail of flags and reopen requests (work item key, decision title and link, the quoted evidence text, the reopen reason, dates). No external servers; no data leaves the Atlassian platform (no egress).
 - **AI:** the automatic and in-panel checks are plain code. The optional Rovo agent runs on Atlassian Rovo under your site's Rovo settings; the app does not send data to any other AI service.
-- **Personal data:** the app does not store account IDs. Quoted evidence and reopen reasons are copied from work item text and could contain whatever people wrote there.
+- **Personal data:** the app does not store account IDs. Quoted evidence and reopen reasons are copied from work item text and could contain whatever people wrote there. Because this text is kept for longer than 24 hours, the app's personal data declaration in the Atlassian developer console is "Yes".
 - **Removal:** uninstalling the app stops all processing; Forge storage is deleted by Atlassian according to its app data retention rules. Comments and labels it added remain in your site like any user-created content and can be deleted there.
 
 Questions: hello@elab-studio.com
