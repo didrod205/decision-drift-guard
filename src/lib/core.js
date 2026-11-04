@@ -135,7 +135,7 @@ export const decisionsFromPage = (page) => {
 export const MIN_SCORE = 0.2;
 
 export const checkIssue = (issue, decisionsAll, opts = {}) => {
-  const raw = `${issue.summary || ''}. ${issue.description || ''} ${(issue.labels || []).join(' ')}`.trim();
+  const raw = `${issue.summary || ''}. ${issue.description || ''} ${(issue.labels || []).filter((l) => !/^decision-(drift|reopen)/.test(l)).join(' ')}`.trim();
   const text = norm(raw);
   const words = text.trim().split(' ').filter(Boolean).length;
   const active = decisionsAll.filter((d) => d.active);
