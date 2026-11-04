@@ -66,7 +66,8 @@ export const competingFrom = (outcome, alternatives) => {
       if (!CHOICE.test(t[i].w) && !(t[i].w === 'by' && t[i + 1] && t[i + 1].w === 'using')) continue;
       let j = i + 1; if (t[j] && t[j].w === 'using') j++;
       let skip = 0; while (t[j] && FILL.has(t[j].w) && skip < 2) { j++; skip++; }
-      for (const n of names) if (n.toks.every((x, k) => t[j + k] && t[j + k].s === x)) { chosen = [n]; break; }
+      const src = sent.split(/\b(?:instead of|rather than|over|not)\b/i)[0];
+      for (const n of names) if (n.toks.every((x, k) => t[j + k] && t[j + k].s === x)) { chosen = [{ ...n, shown: src.slice(t[j].start, t[j + n.toks.length - 1].end) }]; break; }
     }
     if (chosen.length) break;
   }
@@ -88,7 +89,7 @@ export const competingFrom = (outcome, alternatives) => {
   }
   for (const n of inText(alternatives || '')) add(n.p, 'listed under the options the decision considered');
   void toks;
-  return { chosen: chosen.map((c) => c.p), category: [...cats].join(', '), competitors: [...out.values()] };
+  return { chosen: chosen.map((c) => c.shown || c.p), category: [...cats].join(', '), competitors: [...out.values()] };
 };
 
 const ARTICLE = new Set(['the', 'a', 'an', 'this', 'that', 'at', 'one', 'every', 'any', 'each', 'some']);
