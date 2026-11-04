@@ -10,14 +10,19 @@ const cardStyle = xcss({ padding: 'space.150', borderColor: 'color.border', bord
 
 const STATE = {
   conflict: { appearance: 'removed', label: 'Conflicts with a decision' },
-  'needs-judgment': { appearance: 'moved', label: 'Needs judgment' },
+  'possible-conflict': { appearance: 'moved', label: 'Possible conflict' },
+  'needs-judgment': { appearance: 'inprogress', label: 'Needs judgment' },
   clear: { appearance: 'success', label: 'No decision covers this' },
   'no-decisions': { appearance: 'default', label: 'No decisions found' },
   insufficient: { appearance: 'default', label: 'Not enough detail' },
   'no-confluence': { appearance: 'default', label: 'Confluence not connected' },
 };
 
-const DecisionCard = ({ c, conflict, issueKey }) => {
+const SOURCE = { label: 'labelled page', template: 'Decision template', 'decision-item': 'inline decision', title: 'title match' };
+
+const DecisionCard = ({ c, kind, issueKey }) => {
+  const conflict = kind === 'conflict';
+  const possible = kind === 'possible';
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
@@ -25,7 +30,7 @@ const DecisionCard = ({ c, conflict, issueKey }) => {
   const send = async () => {
     setBusy(true);
     try {
-      await invoke('reopen', { pageId: c.pageId, reason });
+      await invoke('reopen', { pageId: c.pageId, itemId: c.itemId, title: c.title, url: c.url, reason });
       setDone('Reopen request posted on the decision page. The decision itself was not changed.');
     } catch (e) {
       setDone(`Could not post: ${e.message}`);
@@ -35,15 +40,17 @@ const DecisionCard = ({ c, conflict, issueKey }) => {
   return (
     <Box xcss={cardStyle}>
       <Stack space="space.100">
-        <Inline space="space.100" alignBlock="center">
-          <Lozenge appearance={conflict ? 'removed' : 'moved'}>{c.key || 'Decision'}</Lozenge>
-          <Link href={c.url} openNewTab>{c.title}</Link>
+        <Inline space="space.100" alignBlock="center" shouldWrap>
+          <Lozenge appearance={conflict ? 'removed' : possible ? 'moved' : 'default'} maxWidth={160}>{c.key || (possible ? 'Possible' : 'Decision')}</Lozenge>
+          <Text size="small" color="color.text.subtlest">{SOURCE[c.source] || 'decision'}</Text>
         </Inline>
+        <Link href={c.url} openNewTab>{c.title}</Link>
         <Text>{c.outcome}</Text>
-        {conflict && c.evidence ? (
+        {(conflict || possible) && c.evidence ? (
           <Stack space="space.050">
-            <Text><Strong>Rule broken: </Strong>{c.evidence.rule}</Text>
+            <Text><Strong>{conflict ? 'Rule broken: ' : 'Decision rule: '}</Strong>{c.evidence.rule.replace(/^Do not: /, 'Do not ')}</Text>
             {c.evidence.issueQuote ? <Text><Strong>{issueKey} says: </Strong><Em>{c.evidence.issueQuote}</Em></Text> : null}
+            {possible && c.evidence.readAs && c.evidence.readAs.length ? <Text size="small"><Strong>Matched by meaning: </Strong>{c.evidence.readAs.join('; ')}</Text> : null}
           </Stack>
         ) : (
           <Text><Strong>Shared topic: </Strong>{c.matchedScope.join(', ')}</Text>
@@ -98,18 +105,19 @@ const App = () => {
         <Button appearance="subtle" onClick={run}>Re-check</Button>
       </Inline>
       <Text>{res.message}</Text>
-      {res.conflicts.map((c) => <DecisionCard key={c.pageId} c={c} conflict issueKey={issueKey} />)}
+      {res.conflicts.map((c) => <DecisionCard key={c.pageId + (c.itemId || '')} c={c} kind="conflict" issueKey={issueKey} />)}
+      {(res.possible || []).map((c) => <DecisionCard key={c.pageId + (c.itemId || '')} c={c} kind="possible" issueKey={issueKey} />)}
       {res.related.length ? <Heading as="h4">Related decisions</Heading> : null}
-      {res.related.map((c) => <DecisionCard key={c.pageId} c={c} issueKey={issueKey} />)}
+      {res.related.map((c) => <DecisionCard key={c.pageId + (c.itemId || '')} c={c} kind="related" issueKey={issueKey} />)}
       {res.ignoredInactive.length ? (
         <Text size="small" color="color.text.subtlest">
           Ignored as no longer active: {res.ignoredInactive.map((d) => `${d.key || d.title} (${d.status}${d.supersededBy ? ', replaced by ' + d.supersededBy : ''})`).join('; ')}
         </Text>
       ) : null}
-      {rovoOn && (res.state === 'needs-judgment' || res.state === 'conflict') ? (
+      {rovoOn && (res.state === 'needs-judgment' || res.state === 'conflict' || res.state === 'possible-conflict') ? (
         <Button appearance="primary" onClick={ask}>Ask the Decision Drift Guard agent</Button>
       ) : null}
-      <Text size="small" color="color.text.subtlest">{res.decisionCount} active decisions checked. Decision pages are Confluence pages labelled "decision".</Text>
+      <Text size="small" color="color.text.subtlest">{res.decisionCount} active decisions checked (labelled pages, Decision template pages, inline decisions and title matches, set in the Decision Drift Guard settings page). Code only, no AI, for this check.</Text>
     </Stack>
   );
 };

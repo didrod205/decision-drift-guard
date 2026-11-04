@@ -1,0 +1,44 @@
+[
+ {
+  "id": "3571713",
+  "title": "DEC-001: Card data never stored on the device",
+  "url": "https://one-atlas-gowb.atlassian.net/wiki/spaces/MD/pages/3571713/DEC-001+Card+data+never+stored+on+the+device",
+  "body": "<h2>Decision summary</h2><table><tbody><tr><th><p>Status</p></th><td><p>Decided</p></td></tr><tr><th><p>Outcome</p></th><td><p>The mobile app never stores card numbers or CVV on the device. Checkout uses the payment provider's hosted tokenization and keeps only the token.</p></td></tr><tr><th><p>Applies to</p></th><td><p>payment, checkout, card, credit card</p></td></tr><tr><th><p>Do not</p></th><td><p>store card number, card cache, cache card details, save card on device, store CVV</p></td></tr><tr><th><p>Instead</p></th><td><p>Use hosted tokenization and keep only the payment token.</p></td></tr><tr><th><p>Decided on</p></th><td><p>2026-09-02</p></td></tr><tr><th><p>Owner</p></th><td><p>Mobile Platform lead</p></td></tr></tbody></table><h2>Why</h2><p>Keeping card data off the device keeps the app out of the card-data compliance scope and removes a high-impact leak path.</p>"
+ },
+ {
+  "id": "3637249",
+  "title": "DEC-002: First-party analytics only",
+  "url": "https://one-atlas-gowb.atlassian.net/wiki/spaces/MD/pages/3637249/DEC-002+First-party+analytics+only",
+  "body": "<h2>Decision summary</h2><table><tbody><tr><th><p>Status</p></th><td><p>Decided</p></td></tr><tr><th><p>Outcome</p></th><td><p>Product analytics go through our own event collector. No third-party analytics or session replay SDKs ship in the app.</p></td></tr><tr><th><p>Applies to</p></th><td><p>analytics, tracking, funnel, events, telemetry</p></td></tr><tr><th><p>Do not</p></th><td><p>third-party analytics SDK, analytics SDK, session replay, heatmap SDK</p></td></tr><tr><th><p>Instead</p></th><td><p>Send events to the internal event collector (schema in the Events catalog).</p></td></tr><tr><th><p>Decided on</p></th><td><p>2026-09-10</p></td></tr><tr><th><p>Owner</p></th><td><p>Data and Privacy lead</p></td></tr></tbody></table><h2>Why</h2><p>Users were promised that behavioural data stays with us. Third-party SDKs also added 4 MB to the app bundle.</p>"
+ },
+ {
+  "id": "3571734",
+  "title": "DEC-003: Minimum OS versions are iOS 16 and Android 10",
+  "url": "https://one-atlas-gowb.atlassian.net/wiki/spaces/MD/pages/3571734/DEC-003+Minimum+OS+versions+are+iOS+16+and+Android+10",
+  "body": "<h2>Decision summary</h2><table><tbody><tr><th><p>Status</p></th><td><p>Decided</p></td></tr><tr><th><p>Outcome</p></th><td><p>New releases support iOS 16 or later and Android 10 or later. Older versions only receive the last compatible build.</p></td></tr><tr><th><p>Applies to</p></th><td><p>minimum OS, legacy devices, iOS 15, Android 9, OS support</p></td></tr><tr><th><p>Do not</p></th><td><p>support iOS 15, support Android 9, lower the minimum OS</p></td></tr><tr><th><p>Instead</p></th><td><p>Point customers on older devices to the last compatible build.</p></td></tr><tr><th><p>Decided on</p></th><td><p>2026-08-21</p></td></tr><tr><th><p>Owner</p></th><td><p>Mobile Dev manager</p></td></tr></tbody></table><h2>Why</h2><p>Testing matrix cost; less than 3 percent of active users were on older versions when this was decided.</p>"
+ },
+ {
+  "id": "3670017",
+  "title": "DEC-004: Passwordless sign-in, no SMS codes",
+  "url": "https://one-atlas-gowb.atlassian.net/wiki/spaces/MD/pages/3670017/DEC-004+Passwordless+sign-in+no+SMS+codes",
+  "body": "<h2>Decision summary</h2><table><tbody><tr><th><p>Status</p></th><td><p>Decided</p></td></tr><tr><th><p>Outcome</p></th><td><p>Sign-in uses email magic links and passkeys. We do not add SMS one-time codes as a primary or fallback method.</p></td></tr><tr><th><p>Applies to</p></th><td><p>login, sign in, sign-in, authentication, one-time code, verification code, OTP</p></td></tr><tr><th><p>Do not</p></th><td><p>SMS OTP, SMS code, SMS verification, text message code</p></td></tr><tr><th><p>Instead</p></th><td><p>Improve magic-link delivery or offer a passkey prompt.</p></td></tr><tr><th><p>Decided on</p></th><td><p>2026-09-18</p></td></tr><tr><th><p>Owner</p></th><td><p>Identity team lead</p></td></tr></tbody></table><h2>Why</h2><p>SIM-swap risk and per-message cost. Support tickets showed email delay is the real pain, not the method.</p>"
+ },
+ {
+  "id": "3702786",
+  "title": "DEC-005: Every new feature ships behind a remote flag",
+  "url": "https://one-atlas-gowb.atlassian.net/wiki/spaces/MD/pages/3702786/DEC-005+Every+new+feature+ships+behind+a+remote+flag",
+  "body": "<h2>Decision summary</h2><table><tbody><tr><th><p>Status</p></th><td><p>Decided</p></td></tr><tr><th><p>Outcome</p></th><td><p>New user-facing features are released behind remote feature flags with a kill switch. Hardcoded or build-time toggles are not used for releases.</p></td></tr><tr><th><p>Applies to</p></th><td><p>feature flag, rollout, roll out, release, launch</p></td></tr><tr><th><p>Do not</p></th><td><p>hardcoded toggle, build-time flag, hardcoded flag</p></td></tr><tr><th><p>Instead</p></th><td><p>Create a remote flag with a kill switch before the first merge.</p></td></tr><tr><th><p>Decided on</p></th><td><p>2026-07-30</p></td></tr><tr><th><p>Owner</p></th><td><p>Release manager</p></td></tr></tbody></table><h2>Why</h2><p>Two incidents in Q2 needed an app-store release to turn a feature off.</p>"
+ },
+ {
+  "id": "3670037",
+  "title": "DEC-006: Offline mode is read-only",
+  "url": "https://one-atlas-gowb.atlassian.net/wiki/spaces/MD/pages/3670037/DEC-006+Offline+mode+is+read-only",
+  "body": "<h2>Decision summary</h2><table><tbody><tr><th><p>Status</p></th><td><p>Superseded</p></td></tr><tr><th><p>Outcome</p></th><td><p>Offline mode only shows cached content. No writes are accepted while offline.</p></td></tr><tr><th><p>Applies to</p></th><td><p>offline, offline mode, sync</p></td></tr><tr><th><p>Do not</p></th><td><p>offline writes, offline edits</p></td></tr><tr><th><p>Instead</p></th><td><p>Show a read-only banner while offline.</p></td></tr><tr><th><p>Decided on</p></th><td><p>2026-05-12</p></td></tr><tr><th><p>Owner</p></th><td><p>Mobile Dev manager</p></td></tr><tr><th><p>Superseded by</p></th><td><p>DEC-007</p></td></tr></tbody></table><h2>Why</h2><p>Conflict resolution was not designed yet.</p>"
+ },
+ {
+  "id": "3801089",
+  "title": "DEC-007: Offline drafts for notes only",
+  "url": "https://one-atlas-gowb.atlassian.net/wiki/spaces/MD/pages/3801089/DEC-007+Offline+drafts+for+notes+only",
+  "body": "<h2>Decision summary</h2><table><tbody><tr><th><p>Status</p></th><td><p>Decided</p></td></tr><tr><th><p>Outcome</p></th><td><p>While offline, users can create and edit note drafts, which sync on reconnect. Payments and checkout stay online-only.</p></td></tr><tr><th><p>Applies to</p></th><td><p>offline, offline mode, sync, drafts</p></td></tr><tr><th><p>Do not</p></th><td><p>offline payment, offline checkout, offline purchase</p></td></tr><tr><th><p>Instead</p></th><td><p>Queue note drafts locally and sync on reconnect; block checkout with a clear offline message.</p></td></tr><tr><th><p>Decided on</p></th><td><p>2026-10-06</p></td></tr><tr><th><p>Owner</p></th><td><p>Mobile Dev manager</p></td></tr></tbody></table><h2>Why</h2><p>Replaces DEC-006 after the sync conflict design was approved.</p>"
+ }
+]

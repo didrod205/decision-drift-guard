@@ -3,8 +3,10 @@
 // (2) "conflict" and "needs judgment" are different states,
 // (3) the original decision page is never edited.
 
+import { compileLexicon, compileDecision, tokenize, findConcepts, semanticCheck, overlapScores, quoteAround, literalNotNegated } from './match';
+
 export const DECISION_LABEL = 'decision';
-const INACTIVE = /supersed|reject|archiv|withdrawn|draft|not started|cancel/i;
+const INACTIVE = /supersed|reject|archiv|withdrawn|draft|not started|in progress|proposed|cancel/i;
 
 export const norm = (s) =>
   ` ${String(s || '')
@@ -21,6 +23,7 @@ export const splitTerms = (s) =>
 
 const stripTags = (html) =>
   String(html || '')
+    .replace(/<ac:placeholder>[\s\S]*?<\/ac:placeholder>/g, ' ')
     // status lozenge macro: keep only its title
     .replace(/<ac:structured-macro[^>]*ac:name="status"[^>]*>[\s\S]*?<ac:parameter ac:name="title">([\s\S]*?)<\/ac:parameter>[\s\S]*?<\/ac:structured-macro>/g, ' $1 ')
     .replace(/<[^>]+>/g, ' ')
@@ -45,6 +48,9 @@ export const parseDecisionPage = (page) => {
   }
   const idMatch = /^([A-Z]{2,10}-\d+)/.exec(page.title || '');
   const status = fields.status || 'Unknown';
+  // Confluence "Decision documentation" template: free text under the "Outcome" heading
+  const sec = /<h[1-3][^>]*>(?:(?!<\/h[1-3]>)[\s\S])*?(Outcome|Decision)\s*<\/h[1-3]>([\s\S]*?)(?=<h[1-3]|$)/i.exec(html);
+  const sectionText = sec ? stripTags(sec[2]) : '';
   return {
     pageId: page.id,
     key: idMatch ? idMatch[1] : null,
@@ -52,7 +58,8 @@ export const parseDecisionPage = (page) => {
     url: page.url,
     status,
     active: !INACTIVE.test(status),
-    outcome: fields.outcome || fields.decision || '',
+    outcome: fields.outcome || fields.decision || sectionText,
+    source: page.source || 'label',
     applies: splitTerms(fields['applies to'] || fields.scope || ''),
     donot: splitTerms(fields['do not'] || fields.avoid || ''),
     instead: fields.instead || '',
@@ -73,19 +80,61 @@ const hits = (text, terms) => {
   });
 };
 
-// Pulls a short quote around the first match from the issue text, for evidence.
+// Pulls a short quote around the first match from the issue text, cut on word boundaries.
 const quoteFrom = (raw, term) => {
   const r = String(raw || '');
   const words = term.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
   const idx = r.toLowerCase().indexOf(words[0] || '');
   if (idx < 0) return '';
-  const start = Math.max(0, idx - 40);
-  return (start > 0 ? '...' : '') + r.slice(start, idx + 80).trim() + (idx + 80 < r.length ? '...' : '');
+  return quoteAround(r, idx, idx + term.length);
 };
 
 export const MIN_WORDS = 4;
 
-export const checkIssue = (issue, decisionsAll) => {
+// Inline Confluence decisions (/decision in the editor) are stored as
+// <ac:adf-node type="decision-item"> with state DECIDED. Each one becomes its own decision.
+export const decisionItemsFrom = (page) => {
+  const out = [];
+  const re = /<ac:adf-node type="decision-item">([\s\S]*?)<\/ac:adf-node>/g;
+  let m;
+  while ((m = re.exec(page.body || ''))) {
+    const inner = m[1];
+    const st = /<ac:adf-attribute key="state">([A-Z]+)<\/ac:adf-attribute>/.exec(inner);
+    const id = /<ac:adf-attribute key="local-id">([^<]+)<\/ac:adf-attribute>/.exec(inner);
+    const txt = /<ac:adf-content>([\s\S]*?)<\/ac:adf-content>/.exec(inner);
+    const text = txt ? stripTags(txt[1]) : '';
+    if (!text) continue;
+    const decided = !st || st[1] === 'DECIDED';
+    out.push({
+      pageId: page.id, itemId: id ? id[1] : String(out.length), key: null,
+      title: `${page.title}: ${text.length > 70 ? text.slice(0, 70).replace(/\s+\S*$/, '') + '...' : text}`,
+      url: page.url, status: decided ? 'Decided' : 'Undecided', active: decided, outcome: text,
+      applies: [], donot: [], instead: '', decidedOn: '', supersededBy: '', source: 'decision-item', lastUpdated: page.lastUpdated || null,
+    });
+  }
+  return out;
+};
+
+const isTemplateDecision = (html) => /<ac:macro ac:name="details"|<ac:structured-macro[^>]*ac:name="details"/.test(html) && />\s*(?:<[^>]+>\s*)*Status\s*</i.test(html) && /Outcome/i.test(html);
+
+// Turns one Confluence page into zero or more decisions, depending on how the team records them.
+export const decisionsFromPage = (page) => {
+  const html = page.body || '';
+  const items = decisionItemsFrom(page);
+  const labelled = page.labelled;
+  const template = isTemplateDecision(html);
+  const hasTable = /<th[^>]*>\s*(?:<[^>]+>\s*)*(Outcome|Do not|Decision)\s*</i.test(html);
+  const list = [];
+  if ((labelled || template || hasTable || page.titleMatch) && !/^template\b/i.test(page.title || '')) {
+    const d = parseDecisionPage({ ...page, source: labelled ? 'label' : template ? 'template' : 'title' });
+    if (d.outcome || d.donot.length) list.push(d);
+  }
+  return list.concat(items);
+};
+
+export const MIN_SCORE = 0.2;
+
+export const checkIssue = (issue, decisionsAll, opts = {}) => {
   const raw = `${issue.summary || ''}. ${issue.description || ''} ${(issue.labels || []).join(' ')}`.trim();
   const text = norm(raw);
   const words = text.trim().split(' ').filter(Boolean).length;
@@ -97,37 +146,53 @@ export const checkIssue = (issue, decisionsAll) => {
     decisionCount: active.length,
     ignoredInactive: [],
     conflicts: [],
+    possible: [],
     related: [],
   };
   if (decisionsAll.length === 0) {
-    return { ...base, state: 'no-decisions', message: `No Confluence pages with the label "${DECISION_LABEL}" were found, so there is nothing to compare against.` };
+    return { ...base, state: 'no-decisions', message: 'No decision records were found in Confluence (label, Decision template, inline decisions or the spaces set in Settings), so there is nothing to compare against.' };
   }
   if (words < MIN_WORDS) {
     return { ...base, state: 'insufficient', message: `This work item has only ${words} ${words === 1 ? 'word' : 'words'}. Add a description so it can be compared with decisions.` };
   }
+  const lex = compileLexicon(opts.synonyms);
+  const tokens = tokenize(raw);
+  const mentions = findConcepts(tokens, lex);
+  const scores = overlapScores(raw, active);
   for (const d of inactive) {
     const a = hits(text, d.applies);
     const x = hits(text, d.donot);
     if (a.length || x.length) base.ignoredInactive.push({ key: d.key, title: d.title, url: d.url, status: d.status, supersededBy: d.supersededBy });
   }
-  for (const d of active) {
+  active.forEach((d, i) => {
     const a = hits(text, d.applies);
-    const x = hits(text, d.donot);
+    const x = hits(text, d.donot).filter((term) => literalNotNegated(tokens, term));
     const card = {
-      key: d.key, pageId: d.pageId, title: d.title, url: d.url, status: d.status,
+      key: d.key, pageId: d.pageId, itemId: d.itemId || null, title: d.title, url: d.url, status: d.status, source: d.source || 'label',
       outcome: d.outcome, instead: d.instead, decidedOn: d.decidedOn,
-      matchedScope: a, matchedRule: x,
+      matchedScope: a, matchedRule: x, score: Math.round(scores[i] * 100) / 100,
       evidence: x.length ? { rule: `Do not: ${x.join(', ')}`, issueQuote: quoteFrom(raw, x[0]) } : null,
     };
-    if (x.length) base.conflicts.push(card);
-    else if (a.length) base.related.push(card);
-  }
+    if (x.length) { base.conflicts.push(card); return; }
+    const sem = semanticCheck(raw, tokens, mentions, compileDecision(d, lex));
+    if (sem.level === 'possible') {
+      base.possible.push({ ...card, evidence: { rule: sem.rule, issueQuote: sem.quote, readAs: sem.why } });
+      return;
+    }
+    if (a.length || scores[i] >= MIN_SCORE || sem.followsInstead) {
+      if (!a.length) card.matchedScope = sem.followsInstead ? ['matches the agreed alternative'] : [`text overlap ${Math.round(scores[i] * 100)}%`];
+      base.related.push(card);
+    }
+  });
   let state = 'clear';
   if (base.conflicts.length) state = 'conflict';
+  else if (base.possible.length) state = 'possible-conflict';
   else if (base.related.length) state = 'needs-judgment';
+  const name = (c) => c.key || c.title;
   const message = {
-    conflict: `Conflicts with ${base.conflicts.map((c) => c.key || c.title).join(', ')}. Each warning quotes the rule it breaks.`,
-    'needs-judgment': `Touches ${base.related.map((c) => c.key || c.title).join(', ')} but no rule is broken word for word. Ask the agent or read the decision before starting.`,
+    conflict: `Conflicts with ${base.conflicts.map(name).join(', ')}. Each warning quotes the rule it breaks.`,
+    'possible-conflict': `Possible conflict with ${base.possible.map(name).join(', ')}: the wording differs, but the same thing is described. Check the evidence or ask the agent.`,
+    'needs-judgment': `Touches ${base.related.map(name).join(', ')} but no rule is broken. Ask the agent or read the decision before starting.`,
     clear: `No active decision covers this work item (${active.length} decisions checked).`,
   }[state];
   return { ...base, state, message };
@@ -144,6 +209,6 @@ export const adfToText = (node) => {
 
 export const noConfluence = (issueKey, err) => ({
   issueKey, checkedAt: new Date().toISOString(), decisionCount: 0, ignoredInactive: [], conflicts: [], related: [],
-  state: 'no-confluence',
-  message: `Could not read Confluence on this site, so nothing was compared. Connect the app to Confluence (Apps > Manage apps), then label decision pages "decision". Details: ${String(err && err.message || err).slice(0, 120)}`,
+  possible: [], state: 'no-confluence',
+  message: `Could not read Confluence on this site, so nothing was compared. Connect the app to Confluence (Apps > Manage apps). Details: ${String(err && err.message || err).slice(0, 120)}`,
 });

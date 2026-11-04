@@ -8,6 +8,21 @@ modules:
       title: Decision Drift Guard
       label: Decision check
       icon: resource:icons;icon.svg
+  jira:adminPage:
+    - key: decision-drift-guard-settings
+      resource: admin
+      resolver:
+        function: resolver
+      render: native
+      title: Decision Drift Guard settings
+  jira:globalPage:
+    - key: decision-drift-guard-history
+      resource: history
+      resolver:
+        function: resolver
+      render: native
+      title: Decision drift history
+      icon: resource:icons;icon.svg
   rovo:agent:
     - key: decision-drift-guard-agent
       name: Decision Drift Guard
@@ -26,7 +41,7 @@ modules:
       name: Get decision context
       function: get-decision-context-fn
       actionVerb: GET
-      description: Returns a Jira work item, a rule-based check against recorded decisions, and every active decision from Confluence (pages labelled "decision") with its outcome and Do not and Instead rules.
+      description: Returns a Jira work item, a rule-based check against recorded decisions, and every active decision from Confluence (labelled pages, Decision template pages, inline decisions, title matches) with its outcome and Do not and Instead rules.
       inputs:
         issueKey:
           title: Work item key
@@ -37,7 +52,7 @@ modules:
       name: List decisions
       function: list-decisions-fn
       actionVerb: GET
-      description: Lists decision pages recorded in Confluence (label "decision"), optionally filtered by a word.
+      description: Lists decisions recorded in Confluence (labelled pages, Decision template pages, inline decisions, title matches), optionally filtered by a word.
       inputs:
         query:
           title: Filter word
@@ -84,6 +99,10 @@ modules:
 resources:
   - key: main
     path: src/frontend/index.jsx
+  - key: admin
+    path: src/frontend/admin.jsx
+  - key: history
+    path: src/frontend/history.jsx
   - key: agent-prompt
     path: prompts
   - key: icons
@@ -96,6 +115,10 @@ permissions:
     - read:confluence-content.all
     - read:page:confluence
     - write:comment:confluence
+    - write:page:confluence
+    - write:confluence-content
+    - read:space:confluence
+    - storage:app
 app:
   runtime:
     name: nodejs24.x
