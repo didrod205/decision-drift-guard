@@ -1,3 +1,3 @@
 export { handler } from './resolvers';
 export { getDecisionContext, listDecisions, reopenDecision } from './actions';
-export { onIssueCreated } from './trigger';
+export { onIssueCreated, onIssueUpdated, onPageUpdated } from './trigger';

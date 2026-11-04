@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import ForgeReconciler, { Text, Stack, Inline, Lozenge, Link, DynamicTable, Spinner, SectionMessage, Button, Strong } from '@forge/react';
+import ForgeReconciler, { Heading, Text, Stack, Inline, Lozenge, Link, DynamicTable, Spinner, SectionMessage, Button, Strong } from '@forge/react';
 import { invoke } from '@forge/bridge';
 
-const KIND = { conflict: ['removed', 'Conflict'], 'possible-conflict': ['moved', 'Possible conflict'], 'reopen-requested': ['inprogress', 'Reopen requested'] };
+const KIND = { conflict: ['removed', 'Conflict'], 'possible-conflict': ['moved', 'Possible conflict'], 'reopen-requested': ['inprogress', 'Reopen requested'], 'decision-changed': ['new', 'Decision changed'] };
+const CH = { retired: ['removed', 'Retired'], changed: ['moved', 'Text changed'], ignored: ['default', 'Ignored edit'] };
 const day = (s) => String(s || '').slice(0, 16).replace('T', ' ');
 
 const App = () => {
   const [data, setData] = useState(null);
   const [err, setErr] = useState(null);
-  const load = () => { setData(null); invoke('history').then(setData).catch((e) => setErr(e.message)); };
+  const [chg, setChg] = useState(null);
+  const load = () => { setData(null); invoke('history').then(setData).catch((e) => setErr(e.message)); invoke('changes').then(setChg).catch(() => setChg(null)); };
   useEffect(load, []);
   if (err) return <SectionMessage appearance="error" title="Could not load history"><Text>{err}</Text></SectionMessage>;
   if (!data) return <Spinner />;
@@ -25,6 +27,22 @@ const App = () => {
       </Inline>
       <Text>Every time a work item was found to conflict, or possibly conflict, with a recorded decision, and every reopen request. Kept in this app's own storage on Atlassian; decision pages are never edited.</Text>
       <Text><Strong>{ids.length}</Strong> {ids.length === 1 ? 'decision' : 'decisions'} drifted from, <Strong>{issues.size}</Strong> {issues.size === 1 ? 'work item' : 'work items'} flagged, <Strong>{reopens}</Strong> {reopens === 1 ? 'reopen request' : 'reopen requests'}.</Text>
+      <Heading as="h3">Decision changes and the work they affected</Heading>
+      {chg && chg.changes.length ? (
+        <DynamicTable
+          head={{ cells: [{ key: 'd', content: 'Decision' }, { key: 'v', content: 'Version' }, { key: 'k', content: 'Result' }, { key: 'w', content: 'What changed' }, { key: 'a', content: 'Work items commented' }, { key: 't', content: 'When (UTC)' }] }}
+          rows={chg.changes.filter((c) => c.state === 'done').map((c, n) => ({ key: `c-${n}`, cells: [
+            { key: 'd', content: c.url ? <Link href={c.url} openNewTab>{c.title || c.pageId}</Link> : (c.title || c.pageId) },
+            { key: 'v', content: `${c.version - 1} to ${c.version}` },
+            { key: 'k', content: <Lozenge appearance={(CH[c.kind] || ['default'])[0]}>{(CH[c.kind] || [c.kind, c.kind])[1]}</Lozenge> },
+            { key: 'w', content: `${c.reason}${c.replacement ? `. Replaced by ${c.replacement.title}` : ''}` },
+            { key: 'a', content: c.affected && c.affected.length ? <Inline space="space.050" shouldWrap>{c.affected.map((k) => <Link key={k} href={`${chg.base}/browse/${k}`} openNewTab>{k}</Link>)}</Inline> : `none (${(c.linked || []).length} linked)` },
+            { key: 't', content: day(c.at) },
+          ] }))}
+        />
+      ) : <Text>No followed decision has changed yet.</Text>}
+      {chg ? <Text size="small" color="color.text.subtlest">{chg.links.length} links between work items and decisions. Rule: a version counts only if the status becomes Superseded, Deprecated, Rejected (or similar), or a sentence of the decision text is added or removed; other edits are listed as Ignored edit and nobody is notified.</Text> : null}
+      <Heading as="h3">Drift found in new work items</Heading>
       {ids.length === 0 ? <SectionMessage appearance="information"><Text>Nothing yet. Create a work item that goes against a decision, or use Create sample data in the settings page.</Text></SectionMessage> : null}
       {ids.map((id) => {
         const rows = groups[id];

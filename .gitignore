@@ -51,3 +51,5 @@ Thumbs.db
 
 /.forge/
 .build/
+eval/change/versions/
+eval/change/.build/

@@ -57,3 +57,44 @@ export const readHistory = async () => {
 
 export const getFlag = (k) => kvs.get(k);
 export const setFlag = (k, v) => kvs.set(k, v);
+
+// Links: "this work item follows this decision". Two keys so both directions are one query.
+const listBy = async (prefix, max = 10) => {
+  const out = [];
+  let cursor;
+  for (let i = 0; i < max; i++) {
+    let qb = kvs.query().where('key', WhereConditions.beginsWith(prefix)).limit(100);
+    if (cursor) qb = qb.cursor(cursor);
+    const r = await qb.getMany();
+    out.push(...r.results.map((x) => x.value));
+    cursor = r.nextCursor;
+    if (!cursor) break;
+  }
+  return out;
+};
+export const addLink = async ({ pageId, issueKey, via, title, url }) => {
+  const k1 = `link:${safe(pageId)}:${safe(issueKey)}`;
+  const prev = await kvs.get(k1);
+  if (prev) return prev;
+  const v = { pageId: String(pageId), issueKey, via, title: title || '', url: url || '', linkedAt: new Date().toISOString() };
+  await kvs.set(k1, v);
+  await kvs.set(`il:${safe(issueKey)}:${safe(pageId)}`, v);
+  return v;
+};
+export const removeLink = async ({ pageId, issueKey }) => {
+  await kvs.delete(`link:${safe(pageId)}:${safe(issueKey)}`);
+  await kvs.delete(`il:${safe(issueKey)}:${safe(pageId)}`);
+};
+export const linksForPage = (pageId) => listBy(`link:${safe(pageId)}:`);
+export const linksForIssue = (issueKey) => listBy(`il:${safe(issueKey)}:`);
+export const allLinks = () => listBy('link:');
+
+// Decision change events, one per page version. claimChange returns false if this version was already handled.
+export const claimChange = async (pageId, version) => {
+  const k = `c:${safe(pageId)}:${String(version).padStart(6, '0')}`;
+  if (await kvs.get(k)) return false;
+  await kvs.set(k, { pageId: String(pageId), version, state: 'processing', at: new Date().toISOString() });
+  return true;
+};
+export const saveChange = (pageId, version, value) => kvs.set(`c:${safe(pageId)}:${String(version).padStart(6, '0')}`, { ...value, pageId: String(pageId), version, at: new Date().toISOString() });
+export const readChanges = () => listBy('c:');

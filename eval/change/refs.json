@@ -1,0 +1,640 @@
+[
+ {
+  "repo": "backstage/backstage",
+  "file": "adr013-use-node-fetch.md",
+  "retired_on": "2024-11-29",
+  "total": 12,
+  "after": 2,
+  "rows": [
+   {
+    "n": 8596,
+    "pr": true,
+    "created": "2021-12-22T19:28:33Z",
+    "after": false,
+    "title": "Replace `got` and `axios` dependencies with `node-fetch`",
+    "url": "https://github.com/backstage/backstage/pull/8596"
+   },
+   {
+    "n": 22528,
+    "pr": false,
+    "created": "2024-01-26T05:36:51Z",
+    "after": false,
+    "title": "\ud83d\udc1b Bug Report:  api/catalog/entities/by-name throws 500 error for 401 authentication error",
+    "url": "https://github.com/backstage/backstage/issues/22528"
+   },
+   {
+    "n": 23046,
+    "pr": true,
+    "created": "2024-02-18T14:57:48Z",
+    "after": false,
+    "title": "Updated Azure DevOps, DevTools, and Linguist to use `fetchApi` as per ADR013",
+    "url": "https://github.com/backstage/backstage/pull/23046"
+   },
+   {
+    "n": 24590,
+    "pr": false,
+    "created": "2024-05-02T10:47:25Z",
+    "after": false,
+    "title": "\ud83d\udc1b Bug Report: Random HTTP failures with Node20",
+    "url": "https://github.com/backstage/backstage/issues/24590"
+   },
+   {
+    "n": 24729,
+    "pr": true,
+    "created": "2024-05-10T22:32:39Z",
+    "after": false,
+    "title": "feat(userInfo): implement persisting user info to support limited tokens",
+    "url": "https://github.com/backstage/backstage/pull/24729"
+   },
+   {
+    "n": 24877,
+    "pr": true,
+    "created": "2024-05-23T00:52:48Z",
+    "after": false,
+    "title": "fix jwks fetch with new backend system behind corporate proxy",
+    "url": "https://github.com/backstage/backstage/pull/24877"
+   },
+   {
+    "n": 24902,
+    "pr": true,
+    "created": "2024-05-25T09:39:23Z",
+    "after": false,
+    "title": "\ud83e\uddf9  use node-fetch",
+    "url": "https://github.com/backstage/backstage/pull/24902"
+   },
+   {
+    "n": 26275,
+    "pr": true,
+    "created": "2024-08-28T07:27:44Z",
+    "after": false,
+    "title": "[NBS Docs] Update integrate search into plugins docs",
+    "url": "https://github.com/backstage/backstage/pull/26275"
+   },
+   {
+    "n": 27189,
+    "pr": true,
+    "created": "2024-10-16T14:08:16Z",
+    "after": false,
+    "title": "Add clarifying comment for use of fetchApiRef",
+    "url": "https://github.com/backstage/backstage/pull/27189"
+   },
+   {
+    "n": 27524,
+    "pr": true,
+    "created": "2024-11-06T07:20:47Z",
+    "after": false,
+    "title": "\ud83e\uddf9 use node-fetch",
+    "url": "https://github.com/backstage/backstage/pull/27524"
+   },
+   {
+    "n": 27984,
+    "pr": true,
+    "created": "2024-12-04T07:18:43Z",
+    "after": true,
+    "title": "Add OpenFGA permission plugin backstage to market place",
+    "url": "https://github.com/backstage/backstage/pull/27984"
+   },
+   {
+    "n": 35129,
+    "pr": true,
+    "created": "2026-08-05T19:43:06Z",
+    "after": true,
+    "title": "docs: Strict mdx cleanup and linting fixes",
+    "url": "https://github.com/backstage/backstage/pull/35129"
+   }
+  ]
+ },
+ {
+  "repo": "cosmos/cosmos-sdk",
+  "file": "adr-010-modular-antehandler.md",
+  "retired_on": "2021-09-15",
+  "total": 12,
+  "after": 8,
+  "rows": [
+   {
+    "n": 3193,
+    "pr": false,
+    "created": "2018-12-26T21:07:49Z",
+    "after": false,
+    "title": "Add provision to support free transactions",
+    "url": "https://github.com/cosmos/cosmos-sdk/issues/3193"
+   },
+   {
+    "n": 4942,
+    "pr": true,
+    "created": "2019-08-21T22:07:46Z",
+    "after": false,
+    "title": "ADR 010: Modular AnteHandler",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/4942"
+   },
+   {
+    "n": 5006,
+    "pr": true,
+    "created": "2019-09-05T20:39:59Z",
+    "after": false,
+    "title": "AnteDecorator",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/5006"
+   },
+   {
+    "n": 6072,
+    "pr": true,
+    "created": "2020-04-24T14:44:07Z",
+    "after": false,
+    "title": "ADR 022 - Custom baseapp panic handling",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/6072"
+   },
+   {
+    "n": 10473,
+    "pr": true,
+    "created": "2021-10-30T13:43:28Z",
+    "after": true,
+    "title": "style: lint go and markdown (backport #10060)",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/10473"
+   },
+   {
+    "n": 18612,
+    "pr": true,
+    "created": "2023-12-02T11:19:48Z",
+    "after": true,
+    "title": "docs: fix typos in docs/architecture",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/18612"
+   },
+   {
+    "n": 22135,
+    "pr": true,
+    "created": "2024-10-05T08:12:30Z",
+    "after": true,
+    "title": "docs: fix several typos in the document ",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/22135"
+   },
+   {
+    "n": 24718,
+    "pr": true,
+    "created": "2025-05-08T13:35:38Z",
+    "after": true,
+    "title": "chore: link validity check",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24718"
+   },
+   {
+    "n": 24976,
+    "pr": true,
+    "created": "2025-07-23T19:28:42Z",
+    "after": true,
+    "title": "chore: enhance codebase clarity through systematic terminology corrections",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24976"
+   },
+   {
+    "n": 24978,
+    "pr": true,
+    "created": "2025-07-23T21:10:38Z",
+    "after": true,
+    "title": "docs: fix typos and improve documentation clarity",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24978"
+   },
+   {
+    "n": 25125,
+    "pr": true,
+    "created": "2025-08-09T19:28:32Z",
+    "after": true,
+    "title": "docs: multiple typos in adr documentation",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25125"
+   },
+   {
+    "n": 25132,
+    "pr": true,
+    "created": "2025-08-11T03:56:35Z",
+    "after": true,
+    "title": "docs:fix typos",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25132"
+   }
+  ]
+ },
+ {
+  "repo": "cosmos/cosmos-sdk",
+  "file": "adr-022-custom-panic-handling.md",
+  "retired_on": "2021-09-15",
+  "total": 13,
+  "after": 10,
+  "rows": [
+   {
+    "n": 6053,
+    "pr": true,
+    "created": "2020-04-22T13:01:15Z",
+    "after": false,
+    "title": "Baseapp recovery middleware",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/6053"
+   },
+   {
+    "n": 6072,
+    "pr": true,
+    "created": "2020-04-24T14:44:07Z",
+    "after": false,
+    "title": "ADR 022 - Custom baseapp panic handling",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/6072"
+   },
+   {
+    "n": 9953,
+    "pr": false,
+    "created": "2021-08-17T09:29:12Z",
+    "after": false,
+    "title": "Write ADR for the Check/DeliverTx middleware refactor",
+    "url": "https://github.com/cosmos/cosmos-sdk/issues/9953"
+   },
+   {
+    "n": 10473,
+    "pr": true,
+    "created": "2021-10-30T13:43:28Z",
+    "after": true,
+    "title": "style: lint go and markdown (backport #10060)",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/10473"
+   },
+   {
+    "n": 19295,
+    "pr": true,
+    "created": "2024-01-30T14:44:35Z",
+    "after": true,
+    "title": "docs: fixes broken links ",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/19295"
+   },
+   {
+    "n": 20193,
+    "pr": true,
+    "created": "2024-04-26T06:46:49Z",
+    "after": true,
+    "title": "chore(docs/learn): fix broken links",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/20193"
+   },
+   {
+    "n": 23619,
+    "pr": true,
+    "created": "2025-02-06T03:46:40Z",
+    "after": true,
+    "title": "build(deps): Bump cosmossdk.io/core/testing from 0.0.1 to 0.0.2",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/23619"
+   },
+   {
+    "n": 23629,
+    "pr": true,
+    "created": "2025-02-07T02:07:49Z",
+    "after": true,
+    "title": "build(deps): Bump cosmossdk.io/core/testing from 0.0.1 to 0.0.2 in /collections",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/23629"
+   },
+   {
+    "n": 23631,
+    "pr": true,
+    "created": "2025-02-07T02:11:04Z",
+    "after": true,
+    "title": "build(deps): Bump cosmossdk.io/core/testing from 0.0.1 to 0.0.2 in /store",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/23631"
+   },
+   {
+    "n": 24707,
+    "pr": true,
+    "created": "2025-05-06T13:27:49Z",
+    "after": true,
+    "title": "chore: add docs updating script",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24707"
+   },
+   {
+    "n": 24718,
+    "pr": true,
+    "created": "2025-05-08T13:35:38Z",
+    "after": true,
+    "title": "chore: link validity check",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24718"
+   },
+   {
+    "n": 24854,
+    "pr": true,
+    "created": "2025-06-09T14:50:56Z",
+    "after": true,
+    "title": "docs: lint ",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24854"
+   },
+   {
+    "n": 25110,
+    "pr": true,
+    "created": "2025-08-07T11:28:50Z",
+    "after": true,
+    "title": "fix: typos in documentation",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25110"
+   }
+  ]
+ },
+ {
+  "repo": "cosmos/cosmos-sdk",
+  "file": "adr-045-check-delivertx-middlewares.md",
+  "retired_on": "2022-05-20",
+  "total": 14,
+  "after": 8,
+  "rows": [
+   {
+    "n": 9589,
+    "pr": true,
+    "created": "2021-06-27T19:09:40Z",
+    "after": false,
+    "title": "Create adr-043-interchain-identifiers.md",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/9589"
+   },
+   {
+    "n": 9708,
+    "pr": true,
+    "created": "2021-07-16T11:20:44Z",
+    "after": false,
+    "title": "docs(adr): ADR-045 Admin module",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/9708"
+   },
+   {
+    "n": 9954,
+    "pr": false,
+    "created": "2021-08-17T09:32:43Z",
+    "after": false,
+    "title": "Update docs for Check/DeliverTx middlewares",
+    "url": "https://github.com/cosmos/cosmos-sdk/issues/9954"
+   },
+   {
+    "n": 9996,
+    "pr": true,
+    "created": "2021-08-24T14:58:40Z",
+    "after": false,
+    "title": "docs(adr): ADR-045: BaseApp `{Check,Deliver}Tx` as Middlewares",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/9996"
+   },
+   {
+    "n": 10693,
+    "pr": true,
+    "created": "2021-12-07T10:50:28Z",
+    "after": false,
+    "title": "docs(adr): Update ADR-045 with new middleware interface",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/10693"
+   },
+   {
+    "n": 11955,
+    "pr": false,
+    "created": "2022-05-13T12:49:33Z",
+    "after": false,
+    "title": "Make middlewares less confusing",
+    "url": "https://github.com/cosmos/cosmos-sdk/issues/11955"
+   },
+   {
+    "n": 22135,
+    "pr": true,
+    "created": "2024-10-05T08:12:30Z",
+    "after": true,
+    "title": "docs: fix several typos in the document ",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/22135"
+   },
+   {
+    "n": 22976,
+    "pr": true,
+    "created": "2024-12-18T09:12:26Z",
+    "after": true,
+    "title": "chore(docs): fix incorrect usage of 'a' and 'an' across documentation",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/22976"
+   },
+   {
+    "n": 22987,
+    "pr": true,
+    "created": "2024-12-18T17:21:10Z",
+    "after": true,
+    "title": "chore(docs): fix incorrect usage of 'a' and 'an' across documentation (backport #22976)",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/22987"
+   },
+   {
+    "n": 25062,
+    "pr": true,
+    "created": "2025-07-31T15:23:36Z",
+    "after": true,
+    "title": "docs: typos",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25062"
+   },
+   {
+    "n": 25065,
+    "pr": true,
+    "created": "2025-07-31T16:04:33Z",
+    "after": true,
+    "title": "docs: fix typos",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25065"
+   },
+   {
+    "n": 25066,
+    "pr": true,
+    "created": "2025-07-31T18:11:39Z",
+    "after": true,
+    "title": "docs: fix grammatical and terminology issues in ADR documents",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25066"
+   },
+   {
+    "n": 25135,
+    "pr": true,
+    "created": "2025-08-11T09:54:55Z",
+    "after": true,
+    "title": "docs: fix typos",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25135"
+   },
+   {
+    "n": 25140,
+    "pr": true,
+    "created": "2025-08-11T19:12:29Z",
+    "after": true,
+    "title": "chore: fix typos",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25140"
+   }
+  ]
+ },
+ {
+  "repo": "cosmos/cosmos-sdk",
+  "file": "adr-047-extend-upgrade-plan.md",
+  "retired_on": "2023-05-16",
+  "total": 12,
+  "after": 6,
+  "rows": [
+   {
+    "n": 9670,
+    "pr": false,
+    "created": "2021-07-10T00:37:30Z",
+    "after": false,
+    "title": "Cosmovisor should require checksum when downloading upgrade binaries",
+    "url": "https://github.com/cosmos/cosmos-sdk/issues/9670"
+   },
+   {
+    "n": 10461,
+    "pr": true,
+    "created": "2021-10-28T20:43:07Z",
+    "after": false,
+    "title": "docs: ADR-047 Governance Voting Profiles ",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/10461"
+   },
+   {
+    "n": 10602,
+    "pr": true,
+    "created": "2021-11-24T00:32:12Z",
+    "after": false,
+    "title": "docs: ADR 047: Extend Upgrade Plan - Initial Draft",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/10602"
+   },
+   {
+    "n": 11295,
+    "pr": true,
+    "created": "2022-03-01T02:11:56Z",
+    "after": false,
+    "title": "feat(x/upgrade): Add upgrade validation options and reuse upgrade functions in cosomovisor",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/11295"
+   },
+   {
+    "n": 11543,
+    "pr": false,
+    "created": "2022-04-05T04:04:40Z",
+    "after": false,
+    "title": "Implement ADR 047: Extend Upgrade Plan",
+    "url": "https://github.com/cosmos/cosmos-sdk/issues/11543"
+   },
+   {
+    "n": 11875,
+    "pr": false,
+    "created": "2022-05-04T16:33:39Z",
+    "after": false,
+    "title": "Remove code deprecated by ADR-047.",
+    "url": "https://github.com/cosmos/cosmos-sdk/issues/11875"
+   },
+   {
+    "n": 24707,
+    "pr": true,
+    "created": "2025-05-06T13:27:49Z",
+    "after": true,
+    "title": "chore: add docs updating script",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24707"
+   },
+   {
+    "n": 24711,
+    "pr": true,
+    "created": "2025-05-06T18:52:44Z",
+    "after": true,
+    "title": "chore: docs fixington",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24711"
+   },
+   {
+    "n": 24854,
+    "pr": true,
+    "created": "2025-06-09T14:50:56Z",
+    "after": true,
+    "title": "docs: lint ",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24854"
+   },
+   {
+    "n": 25066,
+    "pr": true,
+    "created": "2025-07-31T18:11:39Z",
+    "after": true,
+    "title": "docs: fix grammatical and terminology issues in ADR documents",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25066"
+   },
+   {
+    "n": 25080,
+    "pr": true,
+    "created": "2025-08-02T18:40:55Z",
+    "after": true,
+    "title": "docs: fix misspelled issues",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25080"
+   },
+   {
+    "n": 25140,
+    "pr": true,
+    "created": "2025-08-11T19:12:29Z",
+    "after": true,
+    "title": "chore: fix typos",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25140"
+   }
+  ]
+ },
+ {
+  "repo": "cosmos/cosmos-sdk",
+  "file": "adr-048-consensus-fees.md",
+  "retired_on": "2022-04-27",
+  "total": 10,
+  "after": 6,
+  "rows": [
+   {
+    "n": 10653,
+    "pr": true,
+    "created": "2021-12-01T16:04:53Z",
+    "after": false,
+    "title": "docs: ADR-048 a multi-tier in-protocol gas price system",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/10653"
+   },
+   {
+    "n": 11411,
+    "pr": false,
+    "created": "2022-03-18T07:52:47Z",
+    "after": false,
+    "title": "Implement in-protocol gas price system in an extensible way",
+    "url": "https://github.com/cosmos/cosmos-sdk/issues/11411"
+   },
+   {
+    "n": 11494,
+    "pr": false,
+    "created": "2022-03-29T16:52:38Z",
+    "after": false,
+    "title": "Implement ADR-048 multi-tier gas price system",
+    "url": "https://github.com/cosmos/cosmos-sdk/issues/11494"
+   },
+   {
+    "n": 11499,
+    "pr": true,
+    "created": "2022-03-30T07:40:12Z",
+    "after": false,
+    "title": "feat: Implement multi-tier gas price module (adr-048)",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/11499"
+   },
+   {
+    "n": 18680,
+    "pr": true,
+    "created": "2023-12-11T02:30:45Z",
+    "after": true,
+    "title": "chore: fix a number of typos",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/18680"
+   },
+   {
+    "n": 19295,
+    "pr": true,
+    "created": "2024-01-30T14:44:35Z",
+    "after": true,
+    "title": "docs: fixes broken links ",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/19295"
+   },
+   {
+    "n": 24972,
+    "pr": true,
+    "created": "2025-07-23T05:56:46Z",
+    "after": true,
+    "title": "fix typographical errors across architecture design records",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/24972"
+   },
+   {
+    "n": 25068,
+    "pr": true,
+    "created": "2025-07-31T19:40:52Z",
+    "after": true,
+    "title": "fix: multiple typos of different importance",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25068"
+   },
+   {
+    "n": 25133,
+    "pr": true,
+    "created": "2025-08-11T06:22:37Z",
+    "after": true,
+    "title": "Fix grammatical errors and improve text clarity in ADR documentation",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25133"
+   },
+   {
+    "n": 25140,
+    "pr": true,
+    "created": "2025-08-11T19:12:29Z",
+    "after": true,
+    "title": "chore: fix typos",
+    "url": "https://github.com/cosmos/cosmos-sdk/pull/25140"
+   }
+  ]
+ }
+]

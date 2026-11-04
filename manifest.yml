@@ -85,6 +85,16 @@ modules:
       function: on-issue-created-fn
       events:
         - avi:jira:created:issue
+    - key: on-issue-updated
+      function: on-issue-updated-fn
+      events:
+        - avi:jira:updated:issue
+      filter:
+        ignoreSelf: true
+    - key: on-page-updated
+      function: on-page-updated-fn
+      events:
+        - avi:confluence:updated:page
   function:
     - key: resolver
       handler: index.handler
@@ -96,6 +106,10 @@ modules:
       handler: index.reopenDecision
     - key: on-issue-created-fn
       handler: index.onIssueCreated
+    - key: on-issue-updated-fn
+      handler: index.onIssueUpdated
+    - key: on-page-updated-fn
+      handler: index.onPageUpdated
 resources:
   - key: main
     path: src/frontend/index.jsx
@@ -113,6 +127,7 @@ permissions:
     - write:jira-work
     - search:confluence
     - read:confluence-content.all
+    - read:confluence-content.summary
     - read:page:confluence
     - write:comment:confluence
     - write:page:confluence

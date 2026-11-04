@@ -1,6 +1,7 @@
 import api, { route } from '@forge/api';
 import { decisionsFromPage, adfToText } from './core';
 import { getSettings } from './store';
+import { linkedPageIds } from './change';
 
 // as: 'user' (UI and Rovo: respects the viewer's permissions) or 'app' (event trigger)
 const who = (as) => (as === 'app' ? api.asApp() : api.asUser());
@@ -139,4 +140,61 @@ export const siteBase = async () => {
   const res = await api.asApp().requestJira(route`/rest/api/3/serverInfo`);
   const j = await res.json();
   return j.baseUrl;
+};
+
+// One Confluence page with its decisions (same detection as fetchDecisions). Null when not readable.
+export const fetchDecisionPage = async (pageId, as = 'app', settingsIn) => {
+  const st = settingsIn || (await getSettings());
+  const res = await who(as).requestConfluence(route`/wiki/api/v2/pages/${pageId}?body-format=storage&include-labels=true`);
+  if (!res.ok) { console.log(`DDG page ${pageId} read ${res.status}`); return null; }
+  const p = await res.json();
+  const base = (p._links && p._links.base) || '';
+  const labels = ((p.labels && p.labels.results) || []).map((l) => String(l.name).toLowerCase());
+  const wanted = new Set(st.labels.map((l) => l.toLowerCase()));
+  const titleRe = st.titleWords.length ? new RegExp(st.titleWords.map((w) => w.replace(/[^A-Za-z0-9 -]/g, '')).join('|'), 'i') : null;
+  const page = { id: p.id, title: p.title, url: base + ((p._links && p._links.webui) || ''), body: p.body && p.body.storage ? p.body.storage.value : '', version: p.version ? p.version.number : 0, labelled: labels.some((l) => wanted.has(l)), titleMatch: !!(titleRe && titleRe.test(p.title || '')) };
+  return { ...page, decisions: decisionsFromPage(page) };
+};
+
+// Storage body of one page version (v2 API), for comparing a new version with the one before it.
+export const pageVersion = async (pageId, version) => {
+  const res = version
+    ? await api.asApp().requestConfluence(route`/wiki/api/v2/pages/${pageId}?body-format=storage&version=${version}`)
+    : await api.asApp().requestConfluence(route`/wiki/api/v2/pages/${pageId}?body-format=storage`);
+  if (!res.ok) throw new Error(`Page ${pageId} v${version || 'current'} not readable (${res.status})`);
+  const p = await res.json();
+  return { id: p.id, title: p.title, version: p.version ? p.version.number : 0, body: p.body && p.body.storage ? p.body.storage.value : '', url: p._links ? `${p._links.base || ''}${p._links.webui || ''}` : '' };
+};
+
+// Confluence pages a work item points to: links in the description and Confluence remote links.
+export const issueLinkTargets = async (key, as = 'app') => {
+  const res = await who(as).requestJira(route`/rest/api/3/issue/${key}?fields=description`);
+  if (!res.ok) return [];
+  const j = await res.json();
+  let remote = [];
+  const rl = await who(as).requestJira(route`/rest/api/3/issue/${key}/remotelink`);
+  if (rl.ok) remote = await rl.json();
+  const host = (await siteBase()).replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+  return linkedPageIds({ description: j.fields.description, remoteLinks: remote }, host);
+};
+
+// Comment on a work item whose decision changed. Only facts read from the two page versions.
+export const commentDecisionChange = async (issueKey, ch, link) => {
+  const content = [];
+  const what = ch.kind === 'retired' ? `was marked ${ch.toStatus}` : 'had its decision text changed';
+  content.push({ type: 'paragraph', content: [t('Decision Drift Guard, decision changed: ', true), t('this work item follows '), linkText(ch.title, ch.url), t(`, which ${what} (page version ${ch.version - 1} to ${ch.version}).`)] });
+  const facts = [];
+  if (ch.fromStatus !== ch.toStatus) facts.push([t('Status: ', true), t(`${ch.fromStatus} to ${ch.toStatus}`)]);
+  if (ch.replacement) facts.push([t('Replaced by: ', true), ch.replacement.url ? linkText(ch.replacement.title, ch.replacement.url) : t(ch.replacement.title)]);
+  ch.removed.forEach((s) => facts.push([t('Removed: ', true), t(`"${s}"`)]));
+  ch.added.forEach((s) => facts.push([t('Added: ', true), t(`"${s}"`)]));
+  if (link) facts.push([t('Why this work item: ', true), t(`linked to the decision by ${link.via} on ${String(link.linkedAt).slice(0, 10)}.`)]);
+  if (facts.length) content.push({ type: 'bulletList', content: facts.map((c) => ({ type: 'listItem', content: [{ type: 'paragraph', content: c }] })) });
+  content.push({ type: 'paragraph', content: [t('Please check whether this work still holds. Nothing else on this work item or the decision page was changed.')] });
+  const res = await api.asApp().requestJira(route`/rest/api/3/issue/${issueKey}/comment`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ body: { type: 'doc', version: 1, content } }),
+  });
+  if (!res.ok) throw new Error(`Comment failed (${res.status})`);
 };

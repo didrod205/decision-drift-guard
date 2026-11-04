@@ -7,6 +7,13 @@
 2. **"Conflict", "possible conflict" and "needs judgment" are different states.** The automatic check is plain code; a Rovo agent gives a verdict with quotes or answers "Cannot tell".
 3. **Decisions are never edited by the app.** Disagreeing with a decision creates a reopen request (a comment on the decision page), not a silent change.
 
+## Main feature: decision changed
+When a Confluence decision page that a work item follows gets a new version, the app compares it with the previous version (code only, `src/lib/change.js`):
+- **Retired:** status became Superseded, Deprecated, Rejected, Abandoned, Withdrawn, Archived or Replaced.
+- **Text changed:** a sentence of the Decision/Outcome text was added or removed (case, spacing and punctuation ignored).
+- **Ignored edit:** anything else, nobody notified.
+Retired and Text changed put one comment (statuses, removed and added sentences, replacing decision) and the label `decision-changed` on every following work item. A work item follows a decision through a link in its description, a remote link to the page, or Follow in the panel. Tests: `eval/change/README.md` (21 unit cases; replay of 723 real ADR version pairs from Backstage and Cosmos SDK).
+
 ## How it works
 - **Where decisions come from (no label habit needed):** pages with your decision labels (default `decision`), pages made from Confluence's Decision documentation template (Page Properties with Status, plus an Outcome section), inline decisions typed with `/decision` on pages in the decision spaces you list, and pages whose title contains your title words (default: decision, ADR). Superseded, Rejected, Draft, In progress and Not started decisions are ignored.
 - **On create (`avi:jira:created:issue` trigger), code only:** word-for-word `Do not` breaks become a **Conflict** comment (label `decision-drift`); the same thing in other words becomes a **Possible conflict** comment (label `decision-drift-possible`) listing the words read as the same meaning. Negations ("remove the SDK") and the decision's own agreed alternative are not flagged.
