@@ -1,0 +1,1658 @@
+{
+ "sum": {
+  "adrs": 14,
+  "decisionsRead": 14,
+  "decisionKeys": [
+   "ADR-002",
+   "ADR-003",
+   "ADR-004",
+   "ADR-005",
+   "ADR-006",
+   "ADR-007",
+   "ADR-008",
+   "ADR-009",
+   "ADR-010",
+   "ADR-011",
+   "ADR-012",
+   "ADR-013",
+   "ADR-014",
+   "ADR-015"
+  ],
+  "positives": 64,
+  "caughtFlag": 2,
+  "caughtAnyCard": 4,
+  "posWrongFlag": 0,
+  "negatives": 56,
+  "negFlagged": 1,
+  "negAnyCard": 7
+ },
+ "decisions": [
+  {
+   "key": "ADR-002",
+   "outcome": "After that, we will be using backstage.io/v1 and up. metadata A structure that contains metadata about the entity, i.e., things that aren't directly part of the entity specification itself. See below for more details about this structure.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-003",
+   "outcome": "We will stop using default exports except when absolutely necessary (such as React.lazy modules). A workaround exists for those that would prefer to never use default:",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-004",
+   "outcome": "We will make each exported symbol traceable through index files all the way down to the root of the package, src/index.ts. Each index file will only re-export from its own immediate directory children, and only index files will have re-exports. This gives a file tree similar to this: To check whethe",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-005",
+   "outcome": "Backstage should eventually support the following core entities: - Components are individual pieces of software - APIs are the boundaries between different components - Resources are physical or virtual infrastructure needed to operate a component For now, we'll start by only implementing support fo",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-006",
+   "outcome": "To keep our codebase up to date, we have decided that React.FC and React.SFC should be avoided in our codebase when adding new code. Here is an example:",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-007",
+   "outcome": "Moving forward, we have decided that any fetch or XMLHTTPRequest that happens, should be mocked by using msw. Here is an example: and in a more real life scenario, taken from CatalogClient.test.ts",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-008",
+   "outcome": "Name The catalog file should be named This name is a default, not a requirement. The catalog file will work with Backstage regardless of its name.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-009",
+   "outcome": "Entity References in YAML files The textual format, as written by humans, to reference entities by name is on the following form, where square brackets denote optionality: That is, it is composed of between one and three parts in this specific order, without any additional encoding, with those exact",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-010",
+   "outcome": "We will use Luxon as the standard date library within Backstage. Luxon provides a similar feature set and API to Moment.js, but improves on its design through immutability and the usage of modern JavaScript APIs (e.g. Intl). This results in smaller bundle sizes while providing a full feature set and",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-011",
+   "outcome": "We will place all plugin related code in the plugins/ directory. The packages/ directory is reserved for core package of Backstage. We follow this structure for plugin packages (where x is the plugin name, for example catalog or techdocs): - x: Contains the main frontend code of the plugin. - x-modu",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-012",
+   "outcome": "To keep the UI consistent and familiar to users, irrespective of their location, we have decided that we use toLocaleString and Luxon's extensive list of Date and Time presets. Here is an example:",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-013",
+   "outcome": "Backend (node) packages should use the node-fetch package for HTTP data fetching. Example: Frontend plugins and packages should prefer to use the fetchApiRef. It uses cross-fetch internally. Example: Isomorphic packages should have a dependency on the cross-fetch package for mocking and type definit",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-014",
+   "outcome": "All code that is executed in Node.js (including backend and CLIs) should use the native fetch for HTTP data fetching, and typeof fetch as the TypeScript type in code where a fetch implementation can be injected or is referred to. Example: Frontend plugins and packages should prefer to use the fetchA",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-015",
+   "outcome": "We will use one of the following option property names and types when defining options that are intended to provide JSX elements or components:",
+   "alternatives": ""
+  }
+ ],
+ "pos": [
+  {
+   "n": 24590,
+   "want": [
+    "ADR-013",
+    "ADR-014"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-011"
+   ],
+   "relScores": [
+    [
+     "ADR-011",
+     0.3,
+     [
+      "text overlap 30%, shared words only this decision uses: model, client, issu"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 4457,
+   "want": [
+    "ADR-009"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-008"
+   ],
+   "relScores": [
+    [
+     "ADR-008",
+     0.42,
+     [
+      "text overlap 42%, shared words only this decision uses: requirement, work"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 4454,
+   "want": [
+    "ADR-002"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 2091,
+   "want": [
+    "ADR-009"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3148,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "possible-conflict",
+   "flagged": [
+    "ADR-006"
+   ],
+   "related": [],
+   "relScores": [],
+   "hitFlag": true,
+   "hitAny": true,
+   "wrongFlag": [],
+   "ev": [
+    "\"To keep our codebase up to date, we have decided that React.FC and React.SFC should be avoided in our codebase when adding new code.\""
+   ]
+  },
+  {
+   "n": 2271,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 2131,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 2623,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3086,
+   "want": [
+    "ADR-003",
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 2559,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 1660,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3121,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 2791,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 31829,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007",
+    "ADR-013",
+    "ADR-015"
+   ],
+   "relScores": [
+    [
+     "ADR-007",
+     0.3,
+     [
+      "text overlap 30%, shared words only this decision uses: request, real, test"
+     ]
+    ],
+    [
+     "ADR-013",
+     0.31,
+     [
+      "text overlap 31%, shared words only this decision uses: uses, internally"
+     ]
+    ],
+    [
+     "ADR-015",
+     0.51,
+     [
+      "text overlap 51%, shared words only this decision uses: element, defin"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 14840,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 27984,
+   "want": [
+    "ADR-013",
+    "ADR-014"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 27843,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 24880,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 26275,
+   "want": [
+    "ADR-013",
+    "ADR-014"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 23023,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 24729,
+   "want": [
+    "ADR-013",
+    "ADR-014"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 23191,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 20007,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 18862,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007"
+   ],
+   "relScores": [
+    [
+     "ADR-007",
+     0.27,
+     [
+      "text overlap 27%, shared words only this decision uses: request, happen, test"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 19645,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 19881,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 18010,
+   "want": [
+    "ADR-012"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-002",
+    "ADR-011"
+   ],
+   "relScores": [
+    [
+     "ADR-002",
+     0.36,
+     [
+      "text overlap 36%, shared words only this decision uses: metadata, specification, below"
+     ]
+    ],
+    [
+     "ADR-011",
+     0.25,
+     [
+      "text overlap 25%, shared words only this decision uses: optional, third, party, issu"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 17875,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 13634,
+   "want": [
+    "ADR-012"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 12180,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 10817,
+   "want": [
+    "ADR-002"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 9459,
+   "want": [
+    "ADR-010",
+    "ADR-012"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 9289,
+   "want": [
+    "ADR-007"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007"
+   ],
+   "relScores": [
+    [
+     "ADR-007",
+     0.28,
+     [
+      "text overlap 28%, shared words only this decision uses: request, real, test"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 9816,
+   "want": [
+    "ADR-010",
+    "ADR-012"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 8912,
+   "want": [
+    "ADR-010",
+    "ADR-012",
+    "ADR-011"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-015"
+   ],
+   "relScores": [
+    [
+     "ADR-015",
+     0.33,
+     [
+      "text overlap 33%, shared words only this decision uses: option, defin"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 7998,
+   "want": [
+    "ADR-012"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 7780,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 7889,
+   "want": [
+    "ADR-010",
+    "ADR-012"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 7426,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 7174,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-005"
+   ],
+   "relScores": [
+    [
+     "ADR-005",
+     0.28,
+     [
+      "text overlap 28%, shared words only this decision uses: different, extend"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 6882,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 7484,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 6458,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 5330,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 5501,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 6375,
+   "want": [
+    "ADR-007",
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 5642,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-011"
+   ],
+   "relScores": [
+    [
+     "ADR-011",
+     0.29,
+     [
+      "text overlap 29%, shared words only this decision uses: plac, hook, both, model"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 5168,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3729,
+   "want": [
+    "ADR-006",
+    "ADR-007"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 6016,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 4967,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "possible-conflict",
+   "flagged": [
+    "ADR-010"
+   ],
+   "related": [],
+   "relScores": [],
+   "hitFlag": true,
+   "hitAny": true,
+   "wrongFlag": [],
+   "ev": [
+    "The decision chose Luxon; dayjs is another date library"
+   ]
+  },
+  {
+   "n": 5350,
+   "want": [
+    "ADR-006"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 4580,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 4416,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-002"
+   ],
+   "relScores": [
+    [
+     "ADR-002",
+     0.27,
+     [
+      "text overlap 27%, shared words only this decision uses: below, detail"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 5299,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 4515,
+   "want": [
+    "ADR-011"
+   ],
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-007",
+    "ADR-011"
+   ],
+   "relScores": [
+    [
+     "ADR-007",
+     0.27,
+     [
+      "text overlap 27%, shared words only this decision uses: request, forward, test"
+     ]
+    ],
+    [
+     "ADR-011",
+     0.27,
+     [
+      "text overlap 27%, shared words only this decision uses: utility, client"
+     ]
+    ]
+   ],
+   "hitFlag": false,
+   "hitAny": true,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 5114,
+   "want": [
+    "ADR-010"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3249,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3669,
+   "want": [
+    "ADR-007"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3226,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3329,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3349,
+   "want": [
+    "ADR-002",
+    "ADR-009"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3317,
+   "want": [
+    "ADR-003"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 3448,
+   "want": [
+    "ADR-004"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  }
+ ],
+ "neg": [
+  {
+   "n": 3193,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 3194,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 3195,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-010"
+   ],
+   "relScores": [
+    [
+     "ADR-010",
+     0.28
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 3201,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 5194,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 5196,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 5198,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 5207,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7024,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7026,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7027,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7031,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9869,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9874,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-015"
+   ],
+   "relScores": [
+    [
+     "ADR-015",
+     0.32
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 9889,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9896,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 17590,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 17593,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-015"
+   ],
+   "relScores": [
+    [
+     "ADR-015",
+     0.45
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 17594,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 17595,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 26403,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 26404,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 26405,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 26408,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 30103,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-011"
+   ],
+   "relScores": [
+    [
+     "ADR-011",
+     0.28
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 30106,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 30107,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 30108,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 3191,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 3196,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-015"
+   ],
+   "relScores": [
+    [
+     "ADR-015",
+     0.38
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 3197,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 3198,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 5195,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 5197,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 5199,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 5200,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7022,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7023,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7025,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7028,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9861,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9862,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9863,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9864,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-014"
+   ],
+   "relScores": [
+    [
+     "ADR-014",
+     0.36
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 17589,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 17591,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 17592,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 17597,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 26406,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 26407,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 26409,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 26410,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 30102,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 30104,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 30105,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 30109,
+   "state": "possible-conflict",
+   "flagged": [
+    "ADR-003"
+   ],
+   "related": [],
+   "relScores": [],
+   "ev": [
+    "\"We will stop using default exports except when absolutely necessary (such as React.lazy modules).\""
+   ]
+  }
+ ]
+}

@@ -1,0 +1,924 @@
+{
+ "sum": {
+  "adrs": 62,
+  "decisionsRead": 56,
+  "decisionKeys": [
+   "ADR-002",
+   "ADR-003",
+   "ADR-004",
+   "ADR-006",
+   "ADR-007",
+   "ADR-008",
+   "ADR-009",
+   "ADR-011",
+   "ADR-012",
+   "ADR-013",
+   "ADR-014",
+   "ADR-017",
+   "ADR-018",
+   "ADR-019",
+   "ADR-020",
+   "ADR-023",
+   "ADR-024",
+   "ADR-027",
+   "ADR-028",
+   "ADR-029",
+   "ADR-030",
+   "ADR-031",
+   "ADR-032",
+   "ADR-033",
+   "ADR-034",
+   "ADR-035",
+   "ADR-036",
+   "ADR-037",
+   "ADR-038",
+   "ADR-039",
+   "ADR-040",
+   "ADR-041",
+   "ADR-042",
+   "ADR-043",
+   "ADR-044",
+   "ADR-045",
+   "ADR-046",
+   "ADR-047",
+   "ADR-049",
+   "ADR-050",
+   "ADR-050",
+   "ADR-053",
+   "ADR-054",
+   "ADR-055",
+   "ADR-057",
+   "ADR-058",
+   "ADR-059",
+   "ADR-060",
+   "ADR-061",
+   "ADR-062",
+   "ADR-063",
+   "ADR-064",
+   "ADR-065",
+   "ADR-068",
+   "ADR-070",
+   "ADR-076"
+  ],
+  "positives": 6,
+  "caughtFlag": 0,
+  "caughtAnyCard": 0,
+  "posWrongFlag": 0,
+  "negatives": 56,
+  "negFlagged": 0,
+  "negAnyCard": 5
+ },
+ "decisions": [
+  {
+   "key": "ADR-002",
+   "outcome": "Re-structure the /docs folder of the Cosmos SDK github repo as follows: The files in each sub-folders do not matter and will likely change. What matters is the sectioning: * README: Landing page of the docs. * intro: Introductory material. Goal is to have a short explainer of the Cosmos SDK and then",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-003",
+   "outcome": "The Cosmos SDK will include a new CapabilityKeeper abstraction, which is responsible for provisioning, tracking, and authenticating capabilities at runtime. During application initialisation in app.go, the CapabilityKeeper will be hooked up to modules through unique function references (by calling S",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-004",
+   "outcome": "Balances shall be stored per-account & per-denomination under a denomination- and account-unique key, thus enabling O(1) read & write access to the balance of a particular account in a particular denomination.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-006",
+   "outcome": "We recommend replacing the current Keybase backend based on LevelDB with Keyring by 99 designs. This application is designed to provide a common abstraction and uniform interface between many secret stores and is used by AWS Vault application by 99-designs application. This appears to fulfill the re",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-007",
+   "outcome": "A specialization group can be broadly broken down into the following functions (herein containing examples): * Membership Admittance * Membership Acceptance * Membership Revocation * (probably) Without Penalty * member steps down (self-Revocation) * replaced by new member from governance * (probably",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-008",
+   "outcome": "The dCERT group is proposed to include an implementation of a SpecializationGroup as defined in ADR 007. This will include the implementation of: * continuous voting * slashing due to breach of soft contract * revoking a member due to breach of soft contract * emergency disband of the entire dCERT g",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-009",
+   "outcome": "We will implement an evidence module in the Cosmos SDK supporting the following functionality: * Provide developers with the abstractions and interfaces necessary to define custom evidence messages, message handlers, and methods to slash and penalize accordingly for misbehavior. * Support the abilit",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-011",
+   "outcome": "In summary, we will (un)marshal all accounts (interface types) directly using amino, rather than converting to genaccounts’s GenesisAccount type. Since doing this removes the majority of genaccounts's code, we will merge genaccounts into auth. Marshalled accounts will be stored in auth's genesis sta",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-012",
+   "outcome": "We will define a type named Value: The Value works as a reference for a key-value pair in the state, where Value.m defines the key-value space it will access and Value.key defines the exact key for the reference. We will define a type named Mapping: The Mapping works as a reference for a key-value s",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-013",
+   "outcome": "We will add an additional configuration block to app.toml that defines telemetry settings: The given configuration allows for two sinks -- in-memory and Prometheus. We create a Metrics type that performs all the bootstrapping for the operator, so capturing metrics becomes seamless. In addition, Metr",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-014",
+   "outcome": "Decision Design To solve this problem, we will implement a procedure called Proportional Slashing. The desire is that the larger a validator is, the more they should be slashed. The first naive attempt is to make a validator's slash percent proportional to their share of consensus voting power.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-017",
+   "outcome": "The application MUST store the most recent n headers in a persistent store. At first, this store MAY be the current Merklised store. A non-Merklised store MAY be used later as no proofs are necessary. The application MUST store this information by storing new headers immediately when handling abci.R",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-018",
+   "outcome": "We would like to design a mechanism for making the voting period of a governance proposal variable based on the demand of voters. We would like it to be based on the view of the governance participants, rather than just the proposer of a governance proposal (thus, allowing the proposer to select the",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-019",
+   "outcome": "We will adopt Protocol Buffers for serializing persisted structured data in the Cosmos SDK while providing a clean mechanism and developer UX for applications wishing to continue to use Amino. We will provide this mechanism by updating modules to accept a codec interface, Marshaler, instead of a con",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-020",
+   "outcome": "With this in mind, we will tackle the migration path via two main areas, txs and querying. However, this ADR solely focuses on transactions. Querying should be addressed in a future ADR, but it should build off of these proposals.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-023",
+   "outcome": "The goal of this ADR is to provide thoughtful naming conventions that: * encourage a good user experience for when users interact directly with .proto files and fully-qualified protobuf names * balance conciseness against the possibility of either over-optimizing (making names too short and cryptic)",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-024",
+   "outcome": "The x/bank module will be updated to store and index metadata by denom, specifically the \"base\" or smallest unit -- the unit the Cosmos SDK state-machine works with. Metadata may also include a non-zero length list of denominations. Each entry contains the name of the denomination denom, the exponen",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-027",
+   "outcome": "The following encoding scheme is to be used by other ADRs, and in particular for SignDoc serialization.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-028",
+   "outcome": "We define the following account types, for which we define the address function: 1. simple accounts: represented by a regular public key (ie: secp256k1, sr25519) 2. naive multisig: accounts composed by other addressable objects (ie: naive multisig) 3. composed accounts with a native address key (ie:",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-029",
+   "outcome": "As a solution we propose a module, x/feegrant which allows one account, the \"granter\" to grant another account, the \"grantee\" an allowance to spend the granter's account balance for fees within certain well-defined limits. Fee allowances are defined by the extensible FeeAllowanceI interface: Two bas",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-030",
+   "outcome": "We will create a module named authz which provides functionality for granting arbitrary privileges from one account (the _granter_) to another account (the _grantee_). Authorizations must be granted for a particular Msg service methods one by one using an implementation of Authorization interface.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-031",
+   "outcome": "We decide to use protobuf service definitions for defining Msgs as well as the code generated by them as a replacement for Msg handlers. Below we define how this will look for the SubmitProposal message from x/gov module. We start with a Msg service definition: While this is most commonly used for g",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-032",
+   "outcome": "Step-1: Implement additional functionality in the types package: EmitTypedEvent and ParseTypedEvent functions Here, the EmitTypedEvent is a method on EventManager which takes typed event as input and apply json serialization on it. Then it maps the JSON key/value pairs to event.Attributes and emits ",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-033",
+   "outcome": "Based on ADR-021 and ADR-031, we introduce the Inter-Module Communication framework for secure module authorization and OCAPs. When implemented, this could also serve as an alternative to the existing paradigm of passing keepers between modules. The approach outlined here-in is intended to form the ",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-034",
+   "outcome": "We propose the addition of a new feature to x/auth that allows accounts to update the public key associated with their account, while keeping the address the same. This is possible because the Cosmos SDK BaseAccount stores the public key for an account in state, instead of making the assumption that",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-035",
+   "outcome": "It is clear that adding Rosetta API support to the Cosmos SDK will bring value to all the developers and Cosmos SDK based chains in the ecosystem. How it is implemented is key. The driving principles of the proposed design are: 1. Extensibility: it must be as riskless and painless as possible for ap",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-036",
+   "outcome": "The aim is being able to sign arbitrary messages, even using Ledger or similar HSM devices. As a result, signed messages should look roughly like Cosmos SDK messages but must not be a valid on-chain transaction. chain-id, account_number and sequence can all be assigned invalid values. Cosmos SDK 0.4",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-037",
+   "outcome": "We modify the vote structs to be And for backwards compatibility, we introduce MsgVoteWeighted while keeping MsgVote. The ValidateBasic of a MsgVoteWeighted struct would require that 1. The sum of all the rates is equal to 1.0 2. No Option is repeated The governance tally function will iterate over ",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-038",
+   "outcome": "We will modify the CommitMultiStore interface and its concrete (rootmulti) implementations and introduce a new listenkv.Store to allow listening to state changes in underlying KVStores. We don't need to listen to cache stores, because we can't be sure that the writes will be committed eventually, an",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-039",
+   "outcome": "Step-1: Implement buffering of all staking and slashing messages. First we create a pool for storing tokens that are being bonded, but should be applied at the epoch boundary called the EpochDelegationPool. Then, we have two separate queues, one for staking, one for slashing. We describe what happen",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-040",
+   "outcome": "We propose to separate the concerns of state commitment (SC), needed for consensus, and state storage (SS), needed for state machine. Finally we replace IAVL with Celestia's SMT. Celestia SMT is based on Diem (called jellyfish) design [*] - it uses a compute-optimized SMT by replacing subtrees with ",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-041",
+   "outcome": "We propose a migration procedure based on modifying the KV store in-place without involving the JSON export-process-import flow described above.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-042",
+   "outcome": "We propose merging the x/group module with its supporting ORM/Table Store package (#7098) into the Cosmos SDK and continuing development here. There will be a dedicated ADR for the ORM package.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-043",
+   "outcome": "We create a x/nft module, which contains the following functionality: * Store NFTs and track their ownership. * Expose Keeper interface for composing modules to transfer, mint and burn NFTs. * Expose external Message interface for users to transfer ownership of their NFTs. * Query NFTs and their sup",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-044",
+   "outcome": "We decide to keep Buf's recommendations with the following exceptions: * UNARY_RPC: the Cosmos SDK currently does not support streaming RPCs. * COMMENT_FIELD: the Cosmos SDK allows fields with no comments. * SERVICE_SUFFIX: we use the Query and Msg service naming convention, which doesn't use the -S",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-045",
+   "outcome": "We decide to transform Baseapp's implementation of ABCI {Check,Deliver}Tx and its own Simulate methods to use a middleware-based design. The two following interfaces are the base of the middleware design, and are defined in types/tx: where we define the following arguments and return types: Please n",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-046",
+   "outcome": "We will build off of the alignment of x/gov and x/authz work per #9810. Namely, module developers will create one or more unique parameter data structures that must be serialized to state. The Param data structures must implement sdk.Msg interface with respective Protobuf Msg service method which wi",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-047",
+   "outcome": "Decision Protobuf Updates We will update the x/upgrade.Plan message for providing upgrade instructions. The upgrade instructions will contain a list of artifacts available for each platform. It allows for the definition of a pre-run and post-run commands.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-049",
+   "outcome": "A simple proposal based on our existing implementation is that, we can add two new message types: SnapshotExtensionMeta and SnapshotExtensionPayload, and they are appended to the existing multi-store stream with SnapshotExtensionMeta acting as a delimiter between extensions. As the chunk hashes shou",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-050",
+   "outcome": "SIGN_MODE_TEXTUAL renders to an abstract representation, leaving it up to device-specific software how to present this representation given the capabilities, limitations, and conventions of the device. We offer the following normative guidance: 1. The presentation should be as legible as possible to",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-050",
+   "outcome": "In SIGN_MODE_TEXTUAL, a transaction is rendered into a textual representation, which is then sent to a secure device or subsystem for the user to review and sign. Unlike SIGN_MODE_DIRECT, the transmitted data can be simply decoded into legible text even on devices with limited processing and display",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-053",
+   "outcome": "To improve the current situation, the SDK is being refactored into multiple go modules within the current repository. There has been a fair amount of debate as to how to do this, with some developers arguing for larger vs smaller module scopes. There are pros and cons to both approaches (which will ",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-054",
+   "outcome": "The latest DRAFT proposal is: 1. we are alignment on adopting ADR 033 not just as an addition to the framework, but as a core replacement to the keeper paradigm entirely. 2. the ADR 033 inter-module router will accommodate any variation of approach (A) or (B) given the following rules: a. if the cli",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-055",
+   "outcome": "These prior efforts culminated in the creation of the Cosmos SDK orm go module which uses protobuf annotations for specifying ORM table definitions. This ORM is based on the new google.golang.org/protobuf/reflect/protoreflect API and supports: * sorted indexes for all simple protobuf types (except b",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-057",
+   "outcome": "In order to improve the current situation, a new \"app wiring\" paradigm has been designed to replace app.go which involves: * declaration configuration of the modules in an app which can be serialized to JSON or YAML * a dependency-injection (DI) framework for instantiating apps from the configuratio",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-058",
+   "outcome": "To make module development simpler, we provide infrastructure - in the new client/v2 go module - for automatically generating CLI commands based on protobuf definitions to either replace or complement handwritten CLI commands. This will mean that when developing a module, it will be possible to skip",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-059",
+   "outcome": "We accept these test scopes and identify the following decisions points for each. | Scope | App Type | Mocks? | | ----------- | ------------------- | ------ | | Unit | None | Yes | | Integration | integration helpers | Some | | Simulation | minimal app | No | | E2E | minimal app | No | The decision ",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-060",
+   "outcome": "We will integrate ABCI 1.0, which will be introduced in Tendermint v0.37.0, in the next major release of the Cosmos SDK. We will integrate ABCI 1.0 methods on the BaseApp type. We describe the implementations of the two methods individually below. Prior to describing the implementation of the two ne",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-061",
+   "outcome": "We implement the semi-fungible liquid staking system and exemption factor system within the cosmos sdk. Though registered as fungible assets, these tokenized shares have extremely limited fungibility, only among the specific delegation record that was created when shares were tokenized. These assets",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-062",
+   "outcome": "We propose to port the collections API, whose implementation lives in NibiruChain/collections to cosmos-sdk. Collections implements four different storage handlers types: * Map: which deals with simple key=>object mappings. * KeySet: which acts as a Set and only retains keys and no object (usecase: ",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-063",
+   "outcome": "The core API proposes a set of core APIs that modules can rely on to interact with the state machine and expose their functionalities to it that are designed in a principled way such that: * tight coupling of dependencies and unrelated functionalities is minimized or eliminated * APIs can have long-",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-064",
+   "outcome": "We will discuss changes to the Cosmos SDK to implement ABCI 2.0 in two distinct phases, VoteExtensions and FinalizeBlock.",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-065",
+   "outcome": "We propose to build upon some of the great ideas introduced in ADR-040, while being a bit more flexible with the underlying implementations and overall less intrusive. Specifically, we propose to: * Separate the concerns of state commitment (SC), needed for consensus, and state storage (SS), needed ",
+   "alternatives": "There was a previous attempt to refactor the storage layer described in ADR-040. However, this approach mainly stems from the shortcomings of IAVL and various performance issues around it. While there"
+  },
+  {
+   "key": "ADR-068",
+   "outcome": "Suggested this new lifecycle method.",
+   "alternatives": "The first alternative solution introduced a MigrateModuleManager, which only includes the x/upgrade module right now, and baseapp will run their BeginBlockers before the other modules, and reload cont"
+  },
+  {
+   "key": "ADR-070",
+   "outcome": "We propose adding a boolean field unordered and a google.protobuf.Timestamp field timeout_timestamp to the transaction body. Unordered transactions will bypass the traditional account sequence rules and follow the rules described below, without impacting traditional ordered transactions which will f",
+   "alternatives": ""
+  },
+  {
+   "key": "ADR-076",
+   "outcome": "It is recommended that the following improvements be made to Amino JSON signing: * hashes of TxBody and AuthInfo should be added to AminoSignDoc so that encoding-level malleability is addressed * when constructing AminoSignDoc, protoreflect API should be used to ensure that there are no fields in Tx",
+   "alternatives": ""
+  }
+ ],
+ "pos": [
+  {
+   "n": 17164,
+   "want": [
+    "ADR-064"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 12889,
+   "want": [
+    "ADR-059"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 13742,
+   "want": [
+    "ADR-028"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 12182,
+   "want": [
+    "ADR-053"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 10570,
+   "want": [
+    "ADR-028"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  },
+  {
+   "n": 7771,
+   "want": [
+    "ADR-031"
+   ],
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "hitFlag": false,
+   "hitAny": false,
+   "wrongFlag": [],
+   "ev": []
+  }
+ ],
+ "neg": [
+  {
+   "n": 7773,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7774,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7775,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7779,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9046,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9047,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9054,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9055,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 10042,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 10046,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 10047,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 10049,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 11296,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 11297,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 11301,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 11303,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 15996,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 16003,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 16009,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 16011,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 21505,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 21513,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 21526,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 21527,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 24829,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 24848,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 24849,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 24855,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7770,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7772,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7776,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 7777,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9040,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-002"
+   ],
+   "relScores": [
+    [
+     "ADR-002",
+     0.26
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 9041,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9042,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 9044,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 10041,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 10043,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 10044,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 10045,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-060"
+   ],
+   "relScores": [
+    [
+     "ADR-060",
+     0.26
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 11294,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 11295,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 11298,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 11299,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 15997,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-038"
+   ],
+   "relScores": [
+    [
+     "ADR-038",
+     0.28
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 15998,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-038"
+   ],
+   "relScores": [
+    [
+     "ADR-038",
+     0.28
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 15999,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 16000,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 21496,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 21497,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 21498,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 21499,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 24823,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 24824,
+   "state": "needs-judgment",
+   "flagged": [],
+   "related": [
+    "ADR-044"
+   ],
+   "relScores": [
+    [
+     "ADR-044",
+     0.33
+    ]
+   ],
+   "ev": []
+  },
+  {
+   "n": 24825,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  },
+  {
+   "n": 24826,
+   "state": "clear",
+   "flagged": [],
+   "related": [],
+   "relScores": [],
+   "ev": []
+  }
+ ]
+}
