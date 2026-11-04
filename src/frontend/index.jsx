@@ -14,6 +14,7 @@ const STATE = {
   clear: { appearance: 'success', label: 'No decision covers this' },
   'no-decisions': { appearance: 'default', label: 'No decisions found' },
   insufficient: { appearance: 'default', label: 'Not enough detail' },
+  'no-confluence': { appearance: 'default', label: 'Confluence not connected' },
 };
 
 const DecisionCard = ({ c, conflict, issueKey }) => {

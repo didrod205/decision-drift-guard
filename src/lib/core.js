@@ -141,3 +141,9 @@ export const adfToText = (node) => {
   const inner = (node.content || []).map(adfToText).join(node.type === 'doc' ? '\n' : '');
   return ['paragraph', 'heading', 'listItem'].includes(node.type) ? inner + ' ' : inner;
 };
+
+export const noConfluence = (issueKey, err) => ({
+  issueKey, checkedAt: new Date().toISOString(), decisionCount: 0, ignoredInactive: [], conflicts: [], related: [],
+  state: 'no-confluence',
+  message: `Could not read Confluence on this site, so nothing was compared. Connect the app to Confluence (Apps > Manage apps), then label decision pages "decision". Details: ${String(err && err.message || err).slice(0, 120)}`,
+});

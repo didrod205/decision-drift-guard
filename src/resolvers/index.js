@@ -1,12 +1,18 @@
 import Resolver from '@forge/resolver';
-import { checkIssue } from '../lib/core';
+import { checkIssue, noConfluence } from '../lib/core';
 import { fetchDecisions, getIssue, requestReopen, siteBase } from '../lib/atlassian';
 
 const resolver = new Resolver();
 
 resolver.define('check', async ({ context }) => {
   const key = context.extension.issue.key;
-  const [issue, decisions] = await Promise.all([getIssue(key), fetchDecisions()]);
+  const issue = await getIssue(key);
+  let decisions;
+  try {
+    decisions = await fetchDecisions();
+  } catch (e) {
+    return noConfluence(key, e);
+  }
   return checkIssue(issue, decisions);
 });
 

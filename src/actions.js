@@ -1,4 +1,4 @@
-import { checkIssue } from './lib/core';
+import { checkIssue, noConfluence } from './lib/core';
 import { fetchDecisions, getIssue, requestReopen, siteBase } from './lib/atlassian';
 
 const keyFrom = (payload) => {
@@ -10,7 +10,9 @@ const keyFrom = (payload) => {
 export const getDecisionContext = async (payload) => {
   const key = keyFrom(payload);
   if (!key) return { error: 'Give me a Jira work item key, for example MOBL-12.' };
-  const [issue, decisions] = await Promise.all([getIssue(key), fetchDecisions()]);
+  const issue = await getIssue(key);
+  let decisions;
+  try { decisions = await fetchDecisions(); } catch (e) { return { issue, ruleCheck: noConfluence(key, e), activeDecisions: [] }; }
   const result = checkIssue(issue, decisions);
   const activeDecisions = decisions.filter((d) => d.active).map((d) => ({
     key: d.key, pageId: d.pageId, title: d.title, url: d.url, status: d.status, outcome: d.outcome,
